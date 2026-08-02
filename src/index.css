@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+/*
+  Sistema de diseño "Cuaderno de idiomas":
+  - ink: tinta azul-noche, casi negro, para texto y headers
+  - paper: papel cálido, no el beige genérico de IA (#F4F1EA), sino un
+    tono más amarillento que recuerda a una libreta usada
+  - mustard: acento tipo resaltador, para CTAs y estados activos
+  - sage: verde tiza, para estados de éxito/confirmado
+  - rust: rojo lapicera de corrección, para alertas/errores
+  - mist: gris azulado suave, para bordes y divisores
+*/
+@theme {
+  --color-ink: #1e2a44;
+  --color-ink-light: #34435f;
+  --color-paper: #fbf7ef;
+  --color-paper-dim: #f2ecdd;
+  --color-mustard: #d9a441;
+  --color-mustard-dark: #b8842a;
+  --color-sage: #6e8b74;
+  --color-sage-dark: #566e5c;
+  --color-rust: #b5533c;
+  --color-mist: #dce1e2;
+
+  --font-display: 'Fraunces', serif;
+  --font-sans: 'Work Sans', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+}
+
+html {
+  font-family: var(--font-sans);
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+}
+
+/* Borde tipo "ticket perforado" para las tarjetas de turno (elemento firma) */
+.ticket-edge {
+  position: relative;
+}
+.ticket-edge::before,
+.ticket-edge::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  background: var(--color-paper);
+  border-radius: 9999px;
+  transform: translateY(-50%);
+}
+.ticket-edge::before {
+  left: -8px;
+  box-shadow: inset -1px 0 2px rgba(30, 42, 68, 0.08);
+}
+.ticket-edge::after {
+  right: -8px;
+  box-shadow: inset 1px 0 2px rgba(30, 42, 68, 0.08);
+}
+
+/* Foco de teclado visible en todo el proyecto */
+:focus-visible {
+  outline: 2px solid var(--color-mustard-dark);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
