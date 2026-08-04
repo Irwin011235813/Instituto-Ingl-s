@@ -38,8 +38,10 @@ body {
 }
 
 .bg-login-background {
-  background-image: radial-gradient(circle at top left, rgba(217, 164, 65, 0.18), transparent 24%),
-    radial-gradient(circle at bottom right, rgba(110, 139, 116, 0.16), transparent 28%);
+  min-height: 100vh;
+  background: radial-gradient(circle at top left, rgba(249, 241, 227, 0.95), transparent 22%),
+    radial-gradient(circle at bottom right, rgba(243, 231, 200, 0.96), transparent 24%),
+    linear-gradient(180deg, #fbf3ea 0%, #f7efe2 100%);
 }
 
 .bg-paper {
@@ -58,8 +60,16 @@ body {
   color: var(--color-rust);
 }
 
-.border-mist\/80 {
-  border-color: rgba(220, 225, 226, 0.8);
+.text-charcoal {
+  color: #333333;
+}
+
+.border-charcoal\/10 {
+  border-color: rgba(51, 51, 51, 0.1);
+}
+
+.login-card {
+  box-shadow: 0 30px 100px rgba(30, 42, 68, 0.16), 0 0 0 1px rgba(51, 51, 51, 0.06);
 }
 
 .shadow-\[0_24px_80px_rgba\(30\,42\,68\,0\.12\)\] {
