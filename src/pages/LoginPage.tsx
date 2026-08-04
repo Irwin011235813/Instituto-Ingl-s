@@ -32,7 +32,7 @@ export function LoginPage() {
             onClick={iniciarSesionConGoogle}
             disabled={cargando}
           >
-            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white">
+            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/90 backdrop-blur-sm shadow-[0_6px_18px_rgba(30,35,80,0.16)]">
               <svg viewBox="0 0 46 46" className="h-4 w-4" aria-hidden="true">
                 <path fill="#EA4335" d="M23 11.5c3.4 0 5.8 1.5 7.1 2.8l5.2-5.2C32.6 5.1 28.1 3 23 3 14.7 3 7.7 7.9 4.6 14.8l6 4.7C12.3 14.1 17.1 11.5 23 11.5z"/>
                 <path fill="#34A853" d="M8.6 25.5c-.3-1.4-.3-2.7 0-4.1l-6-4.7C1.1 20.8 0 23.8 0 27c0 3.2 1.1 6.2 3 8.7l5.6-4.2z"/>
