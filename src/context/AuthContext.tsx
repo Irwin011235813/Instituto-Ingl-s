@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import { onAuthStateChanged, signInWithPopup, signInWithRedirect, signOut, type User } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db, googleProvider } from '@/services/firebase';
 import type { UsuarioAutorizado } from '@/modules/usuarios/types';
 
@@ -37,8 +37,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const snap = await getDoc(ref);
 
         if (!snap.exists()) {
-          setError('Tu cuenta todavía no fue habilitada por un administrador del instituto.');
-          setPerfil(null);
+          const nuevoUsuario: UsuarioAutorizado = {
+            email: user.email ?? '',
+            nombre: user.displayName ?? 'Alumno',
+            rol: 'alumno',
+            activo: true,
+            fechaAlta: serverTimestamp() as any,
+          };
+
+          await setDoc(ref, nuevoUsuario);
+          setPerfil(nuevoUsuario);
+          setError(null);
         } else {
           const datos = snap.data() as UsuarioAutorizado;
           if (!datos.activo) {
