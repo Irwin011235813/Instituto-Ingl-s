@@ -37,6 +37,39 @@ body {
   color: var(--color-ink);
 }
 
+.bg-login-background {
+  background-image: radial-gradient(circle at top left, rgba(217, 164, 65, 0.18), transparent 24%),
+    radial-gradient(circle at bottom right, rgba(110, 139, 116, 0.16), transparent 28%);
+}
+
+.bg-paper {
+  background-color: var(--color-paper);
+}
+
+.bg-paper-dim {
+  background-color: var(--color-paper-dim);
+}
+
+.text-ink-light {
+  color: var(--color-ink-light);
+}
+
+.text-rust {
+  color: var(--color-rust);
+}
+
+.border-mist\/80 {
+  border-color: rgba(220, 225, 226, 0.8);
+}
+
+.shadow-\[0_24px_80px_rgba\(30\,42\,68\,0\.12\)\] {
+  box-shadow: 0 24px 80px rgba(30, 42, 68, 0.12);
+}
+
+.backdrop-blur-sm {
+  backdrop-filter: blur(10px);
+}
+
 /* Borde tipo "ticket perforado" para las tarjetas de turno (elemento firma) */
 .ticket-edge {
   position: relative;
