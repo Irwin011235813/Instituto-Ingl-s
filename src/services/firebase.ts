@@ -3,14 +3,24 @@ import { getFirestore } from 'firebase/firestore';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 import { getStorage } from 'firebase/storage';
 
-const firebaseConfig = {
+const requiredEnv = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
   storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
-};
+} as const;
+
+const missingEnv = Object.entries(requiredEnv).filter(([, value]) => !value).map(([key]) => key);
+
+if (missingEnv.length > 0) {
+  throw new Error(
+    `Falta la configuración de Firebase en .env.local: ${missingEnv.join(', ')}. Verificá las variables VITE_FIREBASE_*.`
+  );
+}
+
+const firebaseConfig = requiredEnv;
 
 const app = initializeApp(firebaseConfig);
 
