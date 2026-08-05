@@ -311,8 +311,18 @@ export function DashboardPage() {
                 niveles y promociones disponibles.
               </p>
 
+              <div className="mt-8 overflow-hidden rounded-3xl border border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.25)]">
+                <iframe
+                  title="Mapa de Sunshine Instituto"
+                  src="https://maps.google.com/maps?q=-26.023548,-54.608206&z=17&output=embed"
+                  className="h-64 w-full border-0"
+                  allowFullScreen
+                  loading="lazy"
+                />
+              </div>
+
               <div className="mt-8 space-y-4 text-sm text-slate-300">
-                <p>📍 Pto Esperanza - Calle Argentina, Villa Nueva. </p>
+                <p>📍 Puerto Esperanza - Calle Argentina, Villa Nueva.</p>
                 <p>📍 Wanda - Frente a la Plaza Central</p>
                 <p>📞 +54 3757-508363</p>
                 <p>✉️ sunshineinstitute@gmail.com</p>

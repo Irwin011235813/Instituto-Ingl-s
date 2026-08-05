@@ -44,7 +44,7 @@ export function Footer() {
           </a>
 
           <a
-            href="https://www.instagram.com/"
+            href="https://www.instagram.com/instituto.sunshine/"
             target="_blank"
             rel="noreferrer"
             className="rounded-full border border-ink/10 bg-ink/5 p-2 transition-colors hover:bg-ink/10"
@@ -54,7 +54,7 @@ export function Footer() {
           </a>
 
           <a
-            href="https://www.facebook.com/"
+            href="https://www.facebook.com/profile.php?id=100067753920792"
             target="_blank"
             rel="noreferrer"
             className="rounded-full border border-ink/10 bg-ink/5 p-2 transition-colors hover:bg-ink/10"
