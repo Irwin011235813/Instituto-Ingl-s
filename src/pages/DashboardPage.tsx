@@ -126,12 +126,12 @@ export function DashboardPage() {
             </span>
 
             <h1 className="mt-6 text-4xl font-black leading-tight sm:text-5xl lg:text-6xl">
-              Domina el inglés para estudiar, viajar y trabajar.
+              Sumate a aprender inglés a tu ritmo. Acá nos equivocamos, nos reímos y aprendemos juntos
             </h1>
 
             <p className="mt-6 max-w-xl text-base text-emerald-50 sm:text-lg">
               Cursos de inglés para niños, adolescentes y adultos con enfoque práctico,
-              clases dinámicas y acompañamiento personalizado.
+              clases dinámicas. divertidas y acompañamiento personalizado.
             </p>
 
             <div className="mt-8 flex flex-col gap-4 sm:flex-row">
@@ -312,9 +312,10 @@ export function DashboardPage() {
               </p>
 
               <div className="mt-8 space-y-4 text-sm text-slate-300">
-                <p>📍 Av. San Martín 1234, Córdoba</p>
-                <p>📞 +54 351 456-7890</p>
-                <p>✉️ info@instituteenglish.com</p>
+                <p>📍 Pto Esperanza - Calle Argentina, Villa Nueva. </p>
+                <p>📍 Wanda - Frente a la Plaza Central</p>
+                <p>📞 +54 3757-508363</p>
+                <p>✉️ sunshineinstitute@gmail.com</p>
               </div>
             </div>
 

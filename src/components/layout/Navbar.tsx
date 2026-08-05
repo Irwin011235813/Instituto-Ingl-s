@@ -73,11 +73,11 @@ export function Navbar() {
 </div>
 
   {/* --- CONTENIDO DE LA NAVBAR (Tu menú actual) --- */}
-  <div className="relative z-10 container mx-auto px-4 flex items-center justify-between">
+  <nav className="relative z-10 container mx-auto px-4">
+  <div className="flex items-center justify-between">
     
-    {/* Logo / Título "SUNSHINE INSTITUTE" */}
+    {/* 1. Logo (Izquierda) */}
     <a href="#" className="group flex items-center gap-3">
-      {/* Icono pequeño del sol */}
       <div className="hidden sm:block">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" className="h-10 w-10 animate-pulse">
           <circle cx="50" cy="50" r="18" fill="#FFD700" />
@@ -90,36 +90,39 @@ export function Navbar() {
           <path d="M 42 54 Q 50 62 58 54" stroke="#333" strokeWidth="2.5" fill="none" strokeLinecap="round" />
         </svg>
       </div>
-      
-      {/* Texto con gradiente pastel */}
-      <span 
-  className="font-['Fredoka'] text-2xl font-bold tracking-tighter text-white"
-  style={{ 
-    textShadow: 
-      '-2px -2px 0 #000, ' +
-      '2px -2px 0 #000, ' +
-      '-2px 2px 0 #000, ' +
-      '2px 2px 0 #000, ' +
-      '0 -2px 0 #000, ' +
-      '0 2px 0 #000, ' +
-      '-2px 0 0 #000, ' +
-      '2px 0 0 #000'
-  }}
->
-  SUNSHINE INSTITUTE
-</span>
+    
     </a>
 
-    {/* Aquí puedes pegar el resto de tus enlaces de menú (Cursos, Nosotros, etc.) */}
-    <div className="hidden md:flex items-center gap-6">
-      <a href="#" className="text-sky-900 font-semibold hover:text-pink-500 transition-colors">Cursos</a>
-      <a href="#" className="text-sky-900 font-semibold hover:text-pink-500 transition-colors">Nosotros</a>
-      <a href="#" className="text-sky-900 font-semibold hover:text-pink-500 transition-colors">Contacto</a>
-      <button className="bg-yellow-400 hover:bg-yellow-500 text-yellow-900 font-bold py-2 px-5 rounded-full shadow-md transition-transform hover:scale-105">
-        Ingresar
-      </button>
+    {/* 2. Título Centrado (Centro Absoluto) */}
+    <div className="relative z-10 container mx-auto px-4 flex items-center justify-center h-20">
+  
+  {/* Título "SUNSHINE INSTITUTE" */}
+  <a href="#" className="group flex items-center gap-3">
+    <span 
+      className="
+        text-3xl font-bold text-white uppercase tracking-widest 
+        font-[Fredoka] 
+        transition-colors duration-300
+        hover:text-yellow-300
+      "
+      style={{
+        textShadow: '0px 0px 4px black, 0px 0px 8px black'
+      }}
+    >
+      SUNSHINE INSTITUTE
+    </span>
+  </a>
+
+</div>
+
+    {/* 3. Menú de Navegación (Derecha) - Ejemplo placeholder */}
+    <div className="hidden md:flex gap-6 text-gray-700">
+      <a href="#" className="hover:text-yellow-600 transition">Cursos</a>
+      <a href="#" className="hover:text-yellow-600 transition">Contacto</a>
     </div>
+
   </div>
+</nav>
 </nav>
   );
 }
