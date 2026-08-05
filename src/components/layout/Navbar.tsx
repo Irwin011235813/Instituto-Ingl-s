@@ -1,55 +1,125 @@
-import { NavLink } from 'react-router-dom';
-import { BookOpen, CalendarDays, LogOut, LayoutGrid } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 
 export function Navbar() {
   const { perfil, cerrarSesion } = useAuth();
 
-  const enlaceClase = ({ isActive }: { isActive: boolean }) =>
-    `flex items-center gap-1.5 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-      isActive ? 'bg-mustard/20 text-mustard-dark' : 'text-ink-light hover:bg-ink/5'
-    }`;
-
   return (
-    <header className="border-b border-mist bg-white/80 backdrop-blur sticky top-0 z-10">
-      <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border border-white/70 bg-white shadow-[0_6px_18px_rgba(30,42,68,0.12)] ring-2 ring-[#f4d9a6]">
-            <div className="absolute inset-0 bg-[conic-gradient(from_180deg,#ff5f6d,#f9c74f,#7ad6b6,#4da3ff,#8d77ff,#ff5f6d)]" />
-            <div className="absolute inset-0.75 rounded-full bg-white/85" />
-            <span className="relative text-[11px] font-black tracking-[-0.08em] text-ink">S</span>
-          </div>
-          <div className="leading-none">
-            <span className="block font-display text-xl font-bold tracking-tighter text-ink">Sunshine</span>
-            <span className="mt-0.5 block text-[9px] uppercase tracking-[0.28em] text-ink-light">English</span>
-          </div>
-        </div>
+<nav className="relative w-full overflow-hidden bg-linear-to-b from-sky-300 via-blue-200 to-white py-4 shadow-lg">
+  {/* --- ESTILOS DE ANIMACIÓN (Solo necesarios si no están en tu config global) --- */}
+  <style>{`
+    @keyframes floatLeft {
+      0% { transform: translateX(100vw); }
+      100% { transform: translateX(-150px); }
+    }
+    .animate-float-left {
+      animation: floatLeft 35s linear infinite;
+    }
+    .animate-float-left-fast {
+      animation: floatLeft 22s linear infinite;
+    }
+  `}</style>
 
-        <nav className="flex items-center gap-1">
-          <NavLink to="/" end className={enlaceClase}>
-            <LayoutGrid size={16} /> Panel
-          </NavLink>
-          <NavLink to="/turnos" className={enlaceClase}>
-            <CalendarDays size={16} /> Turnos
-          </NavLink>
-          {(perfil?.rol === 'admin' || perfil?.rol === 'profesor') && (
-            <NavLink to="/cursos" className={enlaceClase}>
-              <BookOpen size={16} /> Cursos
-            </NavLink>
-          )}
-        </nav>
+  {/* 1. ARCOÍRIS (Fondo inferior) */}
+  <div className="absolute bottom-0 left-0 right-0 h-24 opacity-80 pointer-events-none">
+    <svg viewBox="0 0 1200 100" preserveAspectRatio="none" className="w-full h-full">
+      <path d="M0,100 Q300,0 600,100 T1200,100" fill="none" stroke="#FFB3B3" strokeWidth="15" />
+      <path d="M0,100 Q300,15 600,100 T1200,100" fill="none" stroke="#FFD999" strokeWidth="15" />
+      <path d="M0,100 Q300,30 600,100 T1200,100" fill="none" stroke="#FFFFCC" strokeWidth="15" />
+      <path d="M0,100 Q300,45 600,100 T1200,100" fill="none" stroke="#CCFFCC" strokeWidth="15" />
+      <path d="M0,100 Q300,60 600,100 T1200,100" fill="none" stroke="#99CCFF" strokeWidth="15" />
+      <path d="M0,100 Q300,75 600,100 T1200,100" fill="none" stroke="#CC99FF" strokeWidth="15" />
+    </svg>
+  </div>
 
-        <div className="flex items-center gap-3">
-          <span className="text-sm text-ink-light hidden sm:inline">{perfil?.nombre}</span>
-          <button
-            onClick={cerrarSesion}
-            className="p-2 rounded-md text-ink-light hover:bg-ink/5 hover:text-rust transition-colors"
-            aria-label="Cerrar sesión"
-          >
-            <LogOut size={18} />
-          </button>
-        </div>
+  {/* 2. NUBES (Movimiento de derecha a izquierda) */}
+  <div className="absolute top-4 opacity-90 animate-float-left">
+    <svg className="w-32 h-16 text-white drop-shadow-md" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M18.42 9.22a6.003 6.003 0 00-11.84 0 4.001 4.001 0 000 7.56h11.84a4.001 4.001 0 000-7.56z" />
+    </svg>
+  </div>
+  <div className="absolute top-12 opacity-80 animate-float-left-fast" style={{ animationDelay: '-10s' }}>
+    <svg className="w-20 h-10 text-white drop-shadow-sm" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M18.42 9.22a6.003 6.003 0 00-11.84 0 4.001 4.001 0 000 7.56h11.84a4.001 4.001 0 000-7.56z" />
+    </svg>
+  </div>
+
+  {/* 3. SOL (Esquina superior derecha, girando) */}
+<div className="absolute -top-7.5 -right-7.5 opacity-90 animate-spin" style={{ animationDuration: '30s' }}>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" className="w-36 h-36">
+    <g>
+      {/* 1. RAYOS (Primero: van al fondo) */}
+      {[0, 45, 90, 135, 180, 225, 270, 315].map((deg, i) => (
+        <line 
+          key={i}
+          x1="50" y1="50" 
+          x2="50" y2="5" /* Rayos más cortos para que no tapen todo */
+          stroke={i % 2 === 0 ? "#FF6B6B" : "#4ECDC4"} 
+          strokeWidth="4" 
+          strokeLinecap="round"
+          transform={`rotate(${deg} 50 50)`}
+        />
+      ))}
+
+      {/* 2. CÍRCULO CENTRAL (Segundo: tapa la base de los rayos) */}
+      <circle cx="50" cy="50" r="28" fill="#FFD700" />
+
+      {/* 3. CARA FELIZ (Tercero: siempre visible encima) */}
+      <circle cx="40" cy="45" r="3" fill="#333" />
+      <circle cx="60" cy="45" r="3" fill="#333" />
+      <path d="M 38 55 Q 50 68 62 55" stroke="#333" strokeWidth="3" fill="none" strokeLinecap="round" />
+    </g>
+  </svg>
+</div>
+
+  {/* --- CONTENIDO DE LA NAVBAR (Tu menú actual) --- */}
+  <div className="relative z-10 container mx-auto px-4 flex items-center justify-between">
+    
+    {/* Logo / Título "SUNSHINE INSTITUTE" */}
+    <a href="#" className="group flex items-center gap-3">
+      {/* Icono pequeño del sol */}
+      <div className="hidden sm:block">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" className="h-10 w-10 animate-pulse">
+          <circle cx="50" cy="50" r="18" fill="#FFD700" />
+          <line x1="50" y1="10" x2="50" y2="25" stroke="#FF6B6B" strokeWidth="3" strokeLinecap="round" />
+          <line x1="50" y1="75" x2="50" y2="90" stroke="#4ECDC4" strokeWidth="3" strokeLinecap="round" />
+          <line x1="10" y1="50" x2="25" y2="50" stroke="#FFE66D" strokeWidth="3" strokeLinecap="round" />
+          <line x1="75" y1="50" x2="90" y2="50" stroke="#FF6B6B" strokeWidth="3" strokeLinecap="round" />
+          <circle cx="44" cy="46" r="3" fill="#333" />
+          <circle cx="56" cy="46" r="3" fill="#333" />
+          <path d="M 42 54 Q 50 62 58 54" stroke="#333" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+        </svg>
       </div>
-    </header>
+      
+      {/* Texto con gradiente pastel */}
+      <span 
+  className="font-['Fredoka'] text-2xl font-bold tracking-tighter text-white"
+  style={{ 
+    textShadow: 
+      '-2px -2px 0 #000, ' +
+      '2px -2px 0 #000, ' +
+      '-2px 2px 0 #000, ' +
+      '2px 2px 0 #000, ' +
+      '0 -2px 0 #000, ' +
+      '0 2px 0 #000, ' +
+      '-2px 0 0 #000, ' +
+      '2px 0 0 #000'
+  }}
+>
+  SUNSHINE INSTITUTE
+</span>
+    </a>
+
+    {/* Aquí puedes pegar el resto de tus enlaces de menú (Cursos, Nosotros, etc.) */}
+    <div className="hidden md:flex items-center gap-6">
+      <a href="#" className="text-sky-900 font-semibold hover:text-pink-500 transition-colors">Cursos</a>
+      <a href="#" className="text-sky-900 font-semibold hover:text-pink-500 transition-colors">Nosotros</a>
+      <a href="#" className="text-sky-900 font-semibold hover:text-pink-500 transition-colors">Contacto</a>
+      <button className="bg-yellow-400 hover:bg-yellow-500 text-yellow-900 font-bold py-2 px-5 rounded-full shadow-md transition-transform hover:scale-105">
+        Ingresar
+      </button>
+    </div>
+  </div>
+</nav>
   );
 }
