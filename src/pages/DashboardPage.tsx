@@ -21,7 +21,7 @@ const testimonios: Testimonio[] = [
       'La atención es excelente y los profesores hacen que cada clase se sienta práctica y motivante. Mejoré mucho mi fluidez en pocos meses.',
   },
   {
-    nombre: 'Carlos Ruiz',
+    nombre: 'Irwin Morinigo',
     rol: 'Alumno de Business English',
     comentario:
       'Me encantó la estructura del curso. Todo está pensado para avanzar rápido y aplicar el inglés en el trabajo real.',
