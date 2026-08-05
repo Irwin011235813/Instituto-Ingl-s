@@ -38,7 +38,7 @@ export function LoginPage() {
           <button
             onClick={iniciarSesionConGoogle}
             disabled={cargando}
-            className="w-full flex items-center justify-center gap-3 py-3 rounded-lg border border-mist bg-white text-sm font-medium text-ink hover:bg-paper-dim/60 hover:border-ink/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-mustard-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full flex items-center justify-center gap-3 py-3 rounded-lg border border-mist bg-white text-sm font-medium text-ink hover:bg-paper-dim/60 hover:border-ink/20 focus-visible:outline-2 focus-visible:outline-mustard-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <svg viewBox="0 0 46 46" className="h-5 w-5 shrink-0" aria-hidden="true">
               <path fill="#EA4335" d="M23 11.5c3.4 0 5.8 1.5 7.1 2.8l5.2-5.2C32.6 5.1 28.1 3 23 3 14.7 3 7.7 7.9 4.6 14.8l6 4.7C12.3 14.1 17.1 11.5 23 11.5z" />

@@ -72,13 +72,34 @@ export function DashboardPage() {
 
   return (
     <div className="bg-slate-50 text-slate-900">
-      <header className="bg-gradient-to-r from-emerald-700 via-emerald-600 to-teal-500 text-white">
+      <header className="bg-linear-to-r from-slate-900 via-indigo-800 to-teal-900 text-white">
         <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-8">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 font-bold">
-              I
-            </div>
-            <span className="text-xl font-bold tracking-tight">Institute English</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 100 100"
+              className="h-10 w-10"
+              aria-label="Logo del instituto"
+              role="img"
+            >
+              <g>
+                <circle cx="50" cy="50" r="18" fill="#FFD700" />
+                <line x1="50" y1="10" x2="50" y2="25" stroke="#FF6B6B" strokeWidth="3" strokeLinecap="round" />
+                <line x1="50" y1="75" x2="50" y2="90" stroke="#4ECDC4" strokeWidth="3" strokeLinecap="round" />
+                <line x1="10" y1="50" x2="25" y2="50" stroke="#FFE66D" strokeWidth="3" strokeLinecap="round" />
+                <line x1="75" y1="50" x2="90" y2="50" stroke="#FF6B6B" strokeWidth="3" strokeLinecap="round" />
+                <line x1="22" y1="22" x2="32" y2="32" stroke="#4ECDC4" strokeWidth="3" strokeLinecap="round" />
+                <line x1="68" y1="68" x2="78" y2="78" stroke="#FFE66D" strokeWidth="3" strokeLinecap="round" />
+                <line x1="22" y1="78" x2="32" y2="68" stroke="#FF6B6B" strokeWidth="3" strokeLinecap="round" />
+                <line x1="68" y1="32" x2="78" y2="22" stroke="#4ECDC4" strokeWidth="3" strokeLinecap="round" />
+              </g>
+              <circle cx="44" cy="46" r="3" fill="#333" />
+              <circle cx="56" cy="46" r="3" fill="#333" />
+              <path d="M 42 54 Q 50 62 58 54" stroke="#333" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+            </svg>
+            <span className="block font-display text-xl font-bold tracking-tighter bg-clip-text text-transparent bg-linear-to-r from-pink-300 via-yellow-200 to-teal-300">
+  SUNSHINE INSTITUTE
+</span>
           </div>
 
           <div className="hidden items-center gap-8 text-sm font-medium md:flex">
@@ -105,12 +126,12 @@ export function DashboardPage() {
             </span>
 
             <h1 className="mt-6 text-4xl font-black leading-tight sm:text-5xl lg:text-6xl">
-              Domina el inglés para estudiar, viajar y trabajar.
+              Sumate a aprender inglés a tu ritmo. Acá nos equivocamos, nos reímos y aprendemos juntos
             </h1>
 
             <p className="mt-6 max-w-xl text-base text-emerald-50 sm:text-lg">
               Cursos de inglés para niños, adolescentes y adultos con enfoque práctico,
-              clases dinámicas y acompañamiento personalizado.
+              clases dinámicas. divertidas y acompañamiento personalizado.
             </p>
 
             <div className="mt-8 flex flex-col gap-4 sm:flex-row">
@@ -167,7 +188,7 @@ export function DashboardPage() {
                       <span className="text-emerald-700">78%</span>
                     </div>
                     <div className="h-3 overflow-hidden rounded-full bg-slate-200">
-                      <div className="h-full w-[78%] rounded-full bg-gradient-to-r from-emerald-500 to-teal-500" />
+                      <div className="h-full w-[78%] rounded-full bg-linear-to-r from-emerald-500 to-teal-500" />
                     </div>
                   </div>
 
@@ -221,7 +242,7 @@ export function DashboardPage() {
             ].map((curso) => (
               <article
                 key={curso.title}
-                className={`rounded-3xl border border-emerald-100 bg-gradient-to-br ${curso.color} p-6 shadow-sm`}
+                className={`rounded-3xl border border-emerald-100 bg-linear-to-br ${curso.color} p-6 shadow-sm`}
               >
                 <div className="mb-4 inline-flex rounded-full bg-white p-3 shadow-sm">
                   <span className="text-2xl">✦</span>
@@ -291,9 +312,10 @@ export function DashboardPage() {
               </p>
 
               <div className="mt-8 space-y-4 text-sm text-slate-300">
-                <p>📍 Av. San Martín 1234, Córdoba</p>
-                <p>📞 +54 351 456-7890</p>
-                <p>✉️ info@instituteenglish.com</p>
+                <p>📍 Pto Esperanza - Calle Argentina, Villa Nueva. </p>
+                <p>📍 Wanda - Frente a la Plaza Central</p>
+                <p>📞 +54 3757-508363</p>
+                <p>✉️ sunshineinstitute@gmail.com</p>
               </div>
             </div>
 
