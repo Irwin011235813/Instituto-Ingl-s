@@ -3,6 +3,7 @@ import { AuthProvider } from '@/context/AuthContext';
 import { ProtectedRoute } from './ProtectedRoute';
 import { RoleRoute } from './RoleRoute';
 import { Navbar } from '@/components/layout/Navbar';
+import { Footer } from '@/components/layout/Footer';
 import { LoginPage } from '@/pages/LoginPage';
 import { DashboardPage } from '@/pages/DashboardPage';
 import { TurnosPage } from '@/pages/TurnosPage';
@@ -10,9 +11,10 @@ import { CursosPage } from '@/pages/CursosPage';
 
 function AppLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen flex flex-col">
       <Navbar />
-      {children}
+      <main className="flex-1">{children}</main>
+      <Footer />
     </div>
   );
 }

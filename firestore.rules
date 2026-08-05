@@ -20,7 +20,7 @@ service cloud.firestore {
       return perfilDe(request.auth.uid).activo == true;
     }
 
-    function esAdmin() {
+    function esAdmin() {  
       return estaAutenticado() && estaActivo() && rolActual() == 'admin';
     }
 
