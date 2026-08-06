@@ -3,8 +3,10 @@ import { AuthProvider } from '@/context/AuthContext';
 import { ProtectedRoute } from './ProtectedRoute';
 import { RoleRoute } from './RoleRoute';
 import { Navbar } from '@/components/layout/Navbar';
+import { PublicNavbar } from '@/components/layout/PublicNavbar';
 import { Footer } from '@/components/layout/Footer';
-import { LoginPage } from '@/pages/LoginPage';
+import { AdminFooter } from '@/components/layout/AdminFooter';
+import { PublicHomePage } from '@/pages/PublicHomePage';
 import { DashboardPage } from '@/pages/DashboardPage';
 import { TurnosPage } from '@/pages/TurnosPage';
 import { CursosPage } from '@/pages/CursosPage';
@@ -13,6 +15,16 @@ function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
+      <main className="flex-1">{children}</main>
+      <AdminFooter />
+    </div>
+  );
+}
+
+function PublicLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="min-h-screen flex flex-col">
+      <PublicNavbar />
       <main className="flex-1">{children}</main>
       <Footer />
     </div>
@@ -24,10 +36,19 @@ export function AppRouter() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/login" element={<LoginPage />} />
-
+          {/* Landing pública: identidad lúdica, visible sin sesión iniciada */}
           <Route
             path="/"
+            element={
+              <PublicLayout>
+                <PublicHomePage />
+              </PublicLayout>
+            }
+          />
+
+          {/* Panel interno: identidad sobria, requiere sesión */}
+          <Route
+            path="/panel"
             element={
               <ProtectedRoute>
                 <AppLayout>

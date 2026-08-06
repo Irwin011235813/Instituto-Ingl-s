@@ -30,9 +30,11 @@
 
 html {
   font-family: var(--font-sans);
+  overflow-x: hidden;
 }
 
 body {
+  overflow-x: hidden;
   background-color: var(--color-paper);
   color: var(--color-ink);
 }

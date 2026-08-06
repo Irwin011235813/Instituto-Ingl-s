@@ -7,7 +7,7 @@ export function ProtectedRoute({ children }: { children: ReactNode }) {
   const { usuarioFirebase, perfil, cargando, error } = useAuth();
 
   if (cargando) return <Spinner label="Verificando sesión..." />;
-  if (!usuarioFirebase) return <Navigate to="/login" replace />;
+  if (!usuarioFirebase) return <Navigate to="/" replace />;
 
   if (error || !perfil) {
     return (
