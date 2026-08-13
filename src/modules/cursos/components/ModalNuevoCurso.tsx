@@ -3,7 +3,7 @@ import { X } from 'lucide-react';
 import { Boton } from '@/components/ui/Boton';
 import { NIVELES, type Nivel } from '@/types/common';
 import { crearCurso } from '../services/cursosService';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/context/useAuth';
 
 interface ModalNuevoCursoProps {
   onCerrar: () => void;
@@ -16,6 +16,8 @@ export function ModalNuevoCurso({ onCerrar, onCreado }: ModalNuevoCursoProps) {
   const [nivel, setNivel] = useState<Nivel>('A1');
   const [descripcion, setDescripcion] = useState('');
   const [cupoMaximo, setCupoMaximo] = useState(10);
+  const [precioMatricula, setPrecioMatricula] = useState(0);
+  const [precioCuotaMensual, setPrecioCuotaMensual] = useState(0);
   const [guardando, setGuardando] = useState(false);
 
   async function manejarEnvio(e: FormEvent) {
@@ -24,7 +26,15 @@ export function ModalNuevoCurso({ onCerrar, onCreado }: ModalNuevoCursoProps) {
     setGuardando(true);
     try {
       await crearCurso(
-        { nombre, nivel, descripcion, profesorUid: usuarioFirebase.uid, cupoMaximo },
+        {
+          nombre,
+          nivel,
+          descripcion,
+          profesorUid: usuarioFirebase.uid,
+          cupoMaximo,
+          precioMatricula,
+          precioCuotaMensual,
+        },
         { uid: usuarioFirebase.uid, nombre: perfil.nombre }
       );
       onCreado();
@@ -92,6 +102,37 @@ export function ModalNuevoCurso({ onCerrar, onCreado }: ModalNuevoCursoProps) {
             onChange={(e) => setCupoMaximo(Number(e.target.value))}
             className="w-full border border-mist rounded-md px-3 py-2 text-sm focus:border-mustard-dark outline-none"
           />
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="block text-sm font-medium text-ink-light mb-1">
+              Matrícula (ARS)
+            </label>
+            <input
+              type="number"
+              min={0}
+              required
+              value={precioMatricula}
+              onChange={(e) => setPrecioMatricula(Number(e.target.value))}
+              className="w-full border border-mist rounded-md px-3 py-2 text-sm focus:border-mustard-dark outline-none"
+              placeholder="15000"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-ink-light mb-1">
+              Cuota mensual (ARS)
+            </label>
+            <input
+              type="number"
+              min={0}
+              required
+              value={precioCuotaMensual}
+              onChange={(e) => setPrecioCuotaMensual(Number(e.target.value))}
+              className="w-full border border-mist rounded-md px-3 py-2 text-sm focus:border-mustard-dark outline-none"
+              placeholder="20000"
+            />
+          </div>
         </div>
 
         <div className="flex justify-end gap-2 pt-2">

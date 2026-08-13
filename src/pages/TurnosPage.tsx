@@ -5,7 +5,7 @@ import { Boton } from '@/components/ui/Boton';
 import { Etiqueta } from '@/components/ui/Etiqueta';
 import { TarjetaTurno } from '@/modules/turnos/components/TarjetaTurno';
 import { useTurnos } from '@/modules/turnos/hooks/useTurnos';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/context/useAuth';
 import {
   inscribirAlumno,
   cancelarInscripcion,

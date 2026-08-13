@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import { BookOpen, CalendarDays, LogOut, LayoutGrid } from 'lucide-react';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/context/useAuth';
 
 /**
  * Navbar del panel interno (usuario ya logueado). A propósito es sobrio

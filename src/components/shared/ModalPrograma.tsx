@@ -1,13 +1,13 @@
 import { X } from 'lucide-react';
 import type { ProgramaCurso } from '@/data/programasCurso';
+import { EnrollmentButton } from './EnrollmentButton';
 
 interface ModalProgramaProps {
   programa: ProgramaCurso;
   onCerrar: () => void;
-  onQuieroInscribirme: () => void;
 }
 
-export function ModalPrograma({ programa, onCerrar, onQuieroInscribirme }: ModalProgramaProps) {
+export function ModalPrograma({ programa, onCerrar }: ModalProgramaProps) {
   return (
     <div
       className="fixed inset-0 z-30 flex items-center justify-center bg-ink/40 p-4"
@@ -81,12 +81,10 @@ export function ModalPrograma({ programa, onCerrar, onQuieroInscribirme }: Modal
           </ul>
         </div>
 
-        <button
-          onClick={onQuieroInscribirme}
-          className="mt-7 w-full rounded-xl bg-sage px-4 py-3 text-sm font-bold text-white transition hover:bg-sage-dark"
-        >
-          Quiero inscribirme en este programa
-        </button>
+        <EnrollmentButton
+          cursoNombre={programa.titulo}
+          className="mt-7 w-full rounded-xl bg-sage px-4 py-3 text-sm font-bold text-white transition hover:bg-sage-dark disabled:cursor-not-allowed disabled:opacity-60"
+        />
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/context/useAuth';
 import type { Rol } from '@/types/common';
 
 export function RoleRoute({ rolesPermitidos, children }: { rolesPermitidos: Rol[]; children: ReactNode }) {

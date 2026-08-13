@@ -1,5 +1,3 @@
-import { Phone } from 'lucide-react';
-
 const telefono = '5493757416333';
 
 function IconoInstagram() {

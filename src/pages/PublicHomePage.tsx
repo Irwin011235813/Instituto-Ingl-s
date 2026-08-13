@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
-import { useAuth } from '@/context/AuthContext';
 import { PROGRAMAS, type ProgramaCurso } from '@/data/programasCurso';
 import { ModalPrograma } from '@/components/shared/ModalPrograma';
+import { EnrollmentButton } from '@/components/shared/EnrollmentButton';
 
 interface Testimonio {
   nombre: string;
@@ -45,7 +45,6 @@ const testimonios: Testimonio[] = [
  * "mustard" como su acento — misma familia de tokens, distinto énfasis.
  */
 export function PublicHomePage() {
-  const { iniciarSesionConGoogle } = useAuth();
   const [programaSeleccionado, setProgramaSeleccionado] = useState<ProgramaCurso | null>(null);
   const [formData, setFormData] = useState<FormState>({
     nombre: '',
@@ -101,12 +100,7 @@ export function PublicHomePage() {
             </p>
 
             <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-              <button
-                onClick={iniciarSesionConGoogle}
-                className="rounded-full bg-paper px-6 py-3 text-center text-sm font-bold text-ink shadow-md transition hover:bg-paper-dim"
-              >
-                Quiero inscribirme
-              </button>
+              <EnrollmentButton className="rounded-full bg-paper px-6 py-3 text-center text-sm font-bold text-ink shadow-md transition hover:bg-paper-dim disabled:cursor-not-allowed disabled:opacity-60" />
               <a
                 href="#cursos"
                 className="rounded-full border border-white/30 bg-transparent px-6 py-3 text-center text-sm font-bold text-paper transition hover:bg-white/10"
@@ -358,10 +352,6 @@ export function PublicHomePage() {
         <ModalPrograma
           programa={programaSeleccionado}
           onCerrar={() => setProgramaSeleccionado(null)}
-          onQuieroInscribirme={() => {
-            setProgramaSeleccionado(null);
-            iniciarSesionConGoogle();
-          }}
         />
       )}
     </div>

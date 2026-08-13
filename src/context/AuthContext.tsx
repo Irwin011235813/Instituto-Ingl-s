@@ -1,19 +1,15 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
-import { onAuthStateChanged, signInWithPopup, signInWithRedirect, signOut, type User } from 'firebase/auth';
+import { useEffect, useState, type ReactNode } from 'react';
+import {
+  onAuthStateChanged,
+  signInWithPopup,
+  signInWithRedirect,
+  signOut,
+  type User,
+} from 'firebase/auth';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db, googleProvider } from '@/services/firebase';
 import type { UsuarioAutorizado } from '@/modules/usuarios/types';
-
-interface AuthContextValue {
-  usuarioFirebase: User | null;
-  perfil: UsuarioAutorizado | null;
-  cargando: boolean;
-  error: string | null;
-  iniciarSesionConGoogle: () => Promise<void>;
-  cerrarSesion: () => Promise<void>;
-}
-
-const AuthContext = createContext<AuthContextValue | undefined>(undefined);
+import { AuthContext } from '@/context/auth-context';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [usuarioFirebase, setUsuarioFirebase] = useState<User | null>(null);
@@ -111,8 +107,3 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 }
 
-export function useAuth() {
-  const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error('useAuth debe usarse dentro de <AuthProvider>');
-  return ctx;
-}

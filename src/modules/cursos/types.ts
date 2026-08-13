@@ -9,6 +9,8 @@ export interface Curso {
   profesor: UsuarioRef;
   cupoMaximo: number;
   activo: boolean;
+  precioMatricula: number;
+  precioCuotaMensual: number;
   fechaCreacion: Timestamp;
 }
 
@@ -18,4 +20,6 @@ export interface CursoFormValues {
   descripcion: string;
   profesorUid: string;
   cupoMaximo: number;
+  precioMatricula: number;
+  precioCuotaMensual: number;
 }

@@ -43,6 +43,10 @@ export function CursosPage() {
             </div>
             <p className="text-sm text-ink-light">{curso.descripcion || 'Sin descripción.'}</p>
             <p className="text-xs font-mono text-ink-light">Profesor/a: {curso.profesor.nombre}</p>
+            <p className="text-xs font-mono text-ink-light">
+              Matrícula: ${curso.precioMatricula?.toLocaleString('es-AR') ?? '—'} · Cuota: $
+              {curso.precioCuotaMensual?.toLocaleString('es-AR') ?? '—'}
+            </p>
             <Boton
               variante="fantasma"
               className="text-xs py-1.5 self-start flex items-center gap-1.5 mt-1"

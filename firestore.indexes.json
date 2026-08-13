@@ -4,42 +4,110 @@
       "collectionGroup": "cursos",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "activo", "order": "ASCENDING" },
-        { "fieldPath": "nombre", "order": "ASCENDING" }
+        {
+          "fieldPath": "activo",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "nombre",
+          "order": "ASCENDING"
+        }
       ]
     },
     {
       "collectionGroup": "turnos",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "estado", "order": "ASCENDING" },
-        { "fieldPath": "dia", "order": "ASCENDING" },
-        { "fieldPath": "horaInicio", "order": "ASCENDING" }
+        {
+          "fieldPath": "estado",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "dia",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "horaInicio",
+          "order": "ASCENDING"
+        }
       ]
     },
     {
       "collectionGroup": "turnos",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "cursoId", "order": "ASCENDING" },
-        { "fieldPath": "estado", "order": "ASCENDING" }
+        {
+          "fieldPath": "cursoId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "estado",
+          "order": "ASCENDING"
+        }
       ]
     },
     {
       "collectionGroup": "inscripciones",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "alumnoUid", "order": "ASCENDING" },
-        { "fieldPath": "estado", "order": "ASCENDING" }
+        {
+          "fieldPath": "alumnoUid",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "estado",
+          "order": "ASCENDING"
+        }
       ]
     },
     {
       "collectionGroup": "inscripciones",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "turnoId", "order": "ASCENDING" },
-        { "fieldPath": "alumnoUid", "order": "ASCENDING" },
-        { "fieldPath": "estado", "order": "ASCENDING" }
+        {
+          "fieldPath": "turnoId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "alumnoUid",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "estado",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "cuotas",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "alumnoUid",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "estado",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "fechaCreacion",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "cuotas",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "alumnoUid",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "fechaCreacion",
+          "order": "DESCENDING"
+        }
       ]
     }
   ],

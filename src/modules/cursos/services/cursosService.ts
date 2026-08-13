@@ -30,6 +30,8 @@ export async function crearCurso(valores: CursoFormValues, profesor: UsuarioRef)
     profesor,
     cupoMaximo: valores.cupoMaximo,
     activo: true,
+    precioMatricula: valores.precioMatricula,
+    precioCuotaMensual: valores.precioCuotaMensual,
     fechaCreacion: serverTimestamp(),
   };
   const ref = await addDoc(cursosRef, nuevoCurso);
