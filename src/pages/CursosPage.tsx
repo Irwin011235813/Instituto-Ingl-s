@@ -25,7 +25,10 @@ export function CursosPage() {
           <Boton
             variante="primario"
             className="flex items-center gap-1.5"
-            onClick={() => setMostrarModalCurso(true)}
+            onClick={() => {
+              console.log('¡El botón de Nuevo curso sí funciona!');
+              setMostrarModalCurso(true);
+            }}
           >
             <Plus size={16} /> Nuevo curso
           </Boton>
@@ -51,7 +54,10 @@ export function CursosPage() {
         <Boton
           variante="primario"
           className="flex items-center gap-1.5"
-          onClick={() => setMostrarModalCurso(true)}
+          onClick={() => {
+            console.log('¡El botón de Nuevo curso sí funciona!');
+            setMostrarModalCurso(true);
+          }}
         >
           <Plus size={16} /> Nuevo curso
         </Boton>
