@@ -11,11 +11,38 @@ import type { ConId } from '@/types/firestore';
 import type { Curso } from '@/modules/cursos/types';
 
 export function CursosPage() {
-  const { cursos, cargando, recargar } = useCursos();
+  const { cursos, cargando, error, recargar } = useCursos();
   const [mostrarModalCurso, setMostrarModalCurso] = useState(false);
   const [cursoParaTurno, setCursoParaTurno] = useState<ConId<Curso> | null>(null);
 
   if (cargando) return <Spinner label="Cargando cursos..." />;
+
+  if (error) {
+    return (
+      <PageContainer>
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="font-display text-2xl font-semibold text-ink">Cursos</h1>
+          <Boton
+            variante="primario"
+            className="flex items-center gap-1.5"
+            onClick={() => setMostrarModalCurso(true)}
+          >
+            <Plus size={16} /> Nuevo curso
+          </Boton>
+        </div>
+
+        <div className="rounded-lg border border-rust/30 bg-rust/5 p-4 text-sm text-rust">
+          {error}
+        </div>
+
+        <div className="mt-4">
+          <Boton variante="fantasma" onClick={recargar}>
+            Reintentar
+          </Boton>
+        </div>
+      </PageContainer>
+    );
+  }
 
   return (
     <PageContainer>
