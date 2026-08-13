@@ -54,13 +54,21 @@ service cloud.firestore {
     }
 
     // --- turnos ---
-    // Misma lógica que cursos: todos los usuarios activos pueden ver los turnos,
-    // pero solo admin/profesor puede crearlos, editarlos o cancelarlos.
-    // El campo "inscriptos" solo se modifica vía transacción junto con "inscripciones",
-    // por eso no se restringe field-by-field aquí (ver nota abajo).
+    // Leemos para todos los usuarios activos. Solo admin/profesor crean o editan el turno completo.
+    // Los alumnos pueden actualizar solo el contador de inscriptos cuando se inscriben o cancelan
+    // su inscripción, manteniendo el resto del documento protegido.
     match /turnos/{turnoId} {
       allow read: if estaAutenticado() && estaActivo();
-      allow create, update, delete: if esGestion();
+      allow create, delete: if esGestion();
+      allow update: if esGestion()
+        || (
+          esAlumno()
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['inscriptos'])
+          && (
+            request.resource.data.inscriptos == resource.data.inscriptos + 1
+            || request.resource.data.inscriptos == resource.data.inscriptos - 1
+          )
+        );
     }
 
     // --- inscripciones ---
