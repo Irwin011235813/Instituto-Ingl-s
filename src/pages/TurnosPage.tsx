@@ -18,7 +18,7 @@ import { DIAS_SEMANA } from '@/types/common';
 
 export function TurnosPage() {
   const { perfil, usuarioFirebase } = useAuth();
-  const { turnos, cargando, recargar } = useTurnos();
+  const { turnos, cargando, error, recargar } = useTurnos();
   const { inscripciones, recargar: recargarInscripciones } = useInscripcionesDeAlumno(
     usuarioFirebase?.uid
   );
@@ -80,7 +80,13 @@ export function TurnosPage() {
         {mensaje && <Etiqueta tono="acento">{mensaje}</Etiqueta>}
       </div>
 
-      {turnos.length === 0 && (
+      {error && (
+        <div className="mb-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+          {error}
+        </div>
+      )}
+
+      {turnos.length === 0 && !error && (
         <p className="text-ink-light text-sm">Todavía no hay turnos programados.</p>
       )}
 

@@ -14,8 +14,10 @@ export function useTurnos() {
     try {
       const datos = await listarTurnosProgramados();
       setTurnos(datos);
-    } catch {
-      setError('No se pudieron cargar los turnos.');
+    } catch (err) {
+      const mensaje = err instanceof Error ? err.message : 'Error desconocido';
+      console.error('Error al cargar turnos:', err);
+      setError(`No se pudieron cargar los turnos. ${mensaje}`);
     } finally {
       setCargando(false);
     }
