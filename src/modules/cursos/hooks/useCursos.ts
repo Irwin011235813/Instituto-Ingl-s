@@ -14,8 +14,9 @@ export function useCursos() {
     try {
       const datos = await listarCursosActivos();
       setCursos(datos);
-    } catch {
-      setError('No se pudieron cargar los cursos.');
+    } catch (err) {
+      console.error('Error cargando cursos:', err);
+      setError('No se pudieron cargar los cursos. Revisá la consola y el índice de Firestore.');
     } finally {
       setCargando(false);
     }

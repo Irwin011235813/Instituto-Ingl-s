@@ -3,7 +3,6 @@ import {
   collection,
   doc,
   getDocs,
-  orderBy,
   query,
   serverTimestamp,
   updateDoc,
@@ -17,9 +16,12 @@ import type { UsuarioRef } from '@/types/common';
 const cursosRef = collection(db, 'cursos');
 
 export async function listarCursosActivos(): Promise<ConId<Curso>[]> {
-  const q = query(cursosRef, where('activo', '==', true), orderBy('nombre'));
+  const q = query(cursosRef, where('activo', '==', true));
   const snap = await getDocs(q);
-  return snap.docs.map((d) => ({ id: d.id, ...(d.data() as Curso) }));
+
+  return snap.docs
+    .map((d) => ({ id: d.id, ...(d.data() as Curso) }))
+    .sort((a, b) => a.nombre.localeCompare(b.nombre));
 }
 
 export async function crearCurso(valores: CursoFormValues, profesor: UsuarioRef): Promise<string> {
