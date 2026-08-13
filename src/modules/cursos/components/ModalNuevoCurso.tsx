@@ -19,11 +19,15 @@ export function ModalNuevoCurso({ onCerrar, onCreado }: ModalNuevoCursoProps) {
   const [precioMatricula, setPrecioMatricula] = useState(0);
   const [precioCuotaMensual, setPrecioCuotaMensual] = useState(0);
   const [guardando, setGuardando] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   async function manejarEnvio(e: FormEvent) {
     e.preventDefault();
     if (!perfil || !usuarioFirebase) return;
+
     setGuardando(true);
+    setError(null);
+
     try {
       await crearCurso(
         {
@@ -38,6 +42,9 @@ export function ModalNuevoCurso({ onCerrar, onCreado }: ModalNuevoCursoProps) {
         { uid: usuarioFirebase.uid, nombre: perfil.nombre }
       );
       onCreado();
+    } catch (e) {
+      const mensaje = e instanceof Error ? e.message : 'No se pudo crear el curso.';
+      setError(mensaje);
     } finally {
       setGuardando(false);
     }
@@ -134,6 +141,12 @@ export function ModalNuevoCurso({ onCerrar, onCreado }: ModalNuevoCursoProps) {
             />
           </div>
         </div>
+
+        {error && (
+          <p className="rounded-md border border-rust/30 bg-rust/5 px-3 py-2 text-sm text-rust">
+            {error}
+          </p>
+        )}
 
         <div className="flex justify-end gap-2 pt-2">
           <Boton type="button" variante="fantasma" onClick={onCerrar}>

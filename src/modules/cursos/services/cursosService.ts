@@ -23,10 +23,24 @@ export async function listarCursosActivos(): Promise<ConId<Curso>[]> {
 }
 
 export async function crearCurso(valores: CursoFormValues, profesor: UsuarioRef): Promise<string> {
+  const nombre = valores.nombre.trim();
+  const descripcion = valores.descripcion.trim();
+
+  if (!nombre) throw new Error('El nombre del curso es obligatorio.');
+  if (!Number.isFinite(valores.cupoMaximo) || valores.cupoMaximo < 1) {
+    throw new Error('El cupo debe ser un número mayor a 0.');
+  }
+  if (!Number.isFinite(valores.precioMatricula) || valores.precioMatricula < 0) {
+    throw new Error('La matrícula debe ser un número mayor o igual a 0.');
+  }
+  if (!Number.isFinite(valores.precioCuotaMensual) || valores.precioCuotaMensual < 0) {
+    throw new Error('La cuota mensual debe ser un número mayor o igual a 0.');
+  }
+
   const nuevoCurso: Omit<Curso, 'fechaCreacion'> & { fechaCreacion: unknown } = {
-    nombre: valores.nombre,
+    nombre,
     nivel: valores.nivel,
-    descripcion: valores.descripcion,
+    descripcion,
     profesor,
     cupoMaximo: valores.cupoMaximo,
     activo: true,
@@ -34,6 +48,7 @@ export async function crearCurso(valores: CursoFormValues, profesor: UsuarioRef)
     precioCuotaMensual: valores.precioCuotaMensual,
     fechaCreacion: serverTimestamp(),
   };
+
   const ref = await addDoc(cursosRef, nuevoCurso);
   return ref.id;
 }
