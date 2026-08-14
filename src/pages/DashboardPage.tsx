@@ -92,18 +92,25 @@ function PuntoDeCobro({ alumnoUid }: { alumnoUid: string | undefined }) {
   const [error, setError] = useState<string | null>(null);
 
   async function pagarCuotaPendiente() {
-    if (estadoAlumno.estado !== 'con-cuota-pendiente') return;
+    if (estadoAlumno.estado !== 'con-cuota-pendiente' && estadoAlumno.estado !== 'al-dia') return;
     setProcesando(true);
     setError(null);
     try {
-      if (estadoAlumno.cuota.mercadoPago.initPoint) {
+      if (estadoAlumno.estado === 'con-cuota-pendiente' && estadoAlumno.cuota.mercadoPago.initPoint) {
         window.location.href = estadoAlumno.cuota.mercadoPago.initPoint;
         return;
       }
-      const { initPoint } = await crearPreferenciaPago({
-        cursoId: estadoAlumno.cuota.cursoId,
-        tipo: 'mensual',
-      });
+
+      const cursoId =
+        estadoAlumno.estado === 'con-cuota-pendiente'
+          ? estadoAlumno.cuota.cursoId
+          : estadoAlumno.inscripcion.cursoId;
+      const tipo =
+        estadoAlumno.estado === 'con-cuota-pendiente' && estadoAlumno.cuota.tipo === 'matricula'
+          ? 'matricula'
+          : 'mensual';
+
+      const { initPoint } = await crearPreferenciaPago({ cursoId, tipo });
       window.location.href = initPoint;
     } catch {
       setError('No se pudo generar el link de pago. Intentá de nuevo en unos minutos.');
@@ -146,6 +153,29 @@ function PuntoDeCobro({ alumnoUid }: { alumnoUid: string | undefined }) {
                 </>
               ) : (
                 'Pagar con Mercado Pago'
+              )}
+            </button>
+            {error && <p className="text-xs text-rust">{error}</p>}
+          </div>
+        </div>
+      ) : estadoAlumno.estado === 'al-dia' ? (
+        <div className="bg-white border border-mustard/40 rounded-lg p-5 flex items-center justify-between gap-4 flex-wrap">
+          <div>
+            <p className="text-sm text-ink-light">Tu inscripción está activa</p>
+            <p className="font-display text-xl font-semibold text-ink">Pagar cuota</p>
+          </div>
+          <div className="flex flex-col items-end gap-2">
+            <button
+              onClick={pagarCuotaPendiente}
+              disabled={procesando}
+              className="rounded-full bg-sage px-5 py-2.5 text-sm font-bold text-white transition hover:bg-sage-dark disabled:cursor-not-allowed disabled:opacity-60 flex items-center gap-2"
+            >
+              {procesando ? (
+                <>
+                  <Loader2 size={16} className="animate-spin" /> Generando link...
+                </>
+              ) : (
+                'Pagar cuota'
               )}
             </button>
             {error && <p className="text-xs text-rust">{error}</p>}

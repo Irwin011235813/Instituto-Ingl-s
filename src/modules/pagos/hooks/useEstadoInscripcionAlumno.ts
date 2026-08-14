@@ -28,13 +28,19 @@ export function useEstadoInscripcionAlumno(alumnoUid: string | undefined) {
     }
 
     const inscripcion = inscripciones[0];
-    const cuotaPendiente = await obtenerCuotaPendiente(alumnoUid);
 
-    if (cuotaPendiente) {
-      setResultado({ estado: 'con-cuota-pendiente', inscripcion, cuota: cuotaPendiente });
-    } else {
-      setResultado({ estado: 'al-dia', inscripcion });
+    try {
+      const cuotaPendiente = await obtenerCuotaPendiente(alumnoUid);
+      if (cuotaPendiente) {
+        setResultado({ estado: 'con-cuota-pendiente', inscripcion, cuota: cuotaPendiente });
+        return;
+      }
+    } catch {
+      // Firestore puede seguir construyendo el índice cuando llega la primera consulta.
+      // En ese caso, no bloqueamos la UI: el alumno todavía puede pagar desde la vista.
     }
+
+    setResultado({ estado: 'al-dia', inscripcion });
   }, [alumnoUid]);
 
   useEffect(() => {
