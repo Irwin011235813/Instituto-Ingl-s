@@ -10,7 +10,7 @@ if (admin.apps.length === 0) {
 
 const db = admin.firestore();
 
-const MP_ACCESS_TOKEN = defineSecret('MP_ACCESS_TOKEN');
+const MERCADOPAGO_ACCESS_TOKEN = defineSecret('MERCADOPAGO_ACCESS_TOKEN');
 const APP_URL = defineSecret('APP_URL');
 
 type TipoPago = 'matricula' | 'mensual';
@@ -22,7 +22,7 @@ interface CrearPreferenciaRequest {
 }
 
 export const crearPreferenciaPago = onCall<CrearPreferenciaRequest>(
-  { secrets: [MP_ACCESS_TOKEN, APP_URL], region: 'us-central1' },
+  { secrets: [MERCADOPAGO_ACCESS_TOKEN, APP_URL], region: 'us-central1' },
   async (request) => {
     const auth = request.auth;
     if (!auth) {
@@ -91,7 +91,7 @@ export const crearPreferenciaPago = onCall<CrearPreferenciaRequest>(
       fechaPago: null,
     });
 
-    const client = new MercadoPagoConfig({ accessToken: MP_ACCESS_TOKEN.value() });
+    const client = new MercadoPagoConfig({ accessToken: MERCADOPAGO_ACCESS_TOKEN.value() });
     const preferenceApi = new Preference(client);
     const appUrl = APP_URL.value();
 
@@ -130,7 +130,7 @@ export const crearPreferenciaPago = onCall<CrearPreferenciaRequest>(
 );
 
 export const webhookMercadoPago = onRequest(
-  { secrets: [MP_ACCESS_TOKEN] },
+  { secrets: [MERCADOPAGO_ACCESS_TOKEN] },
   async (req, res) => {
     try {
       const paymentId = req.query['data.id'] ?? req.body?.data?.id;
@@ -141,7 +141,7 @@ export const webhookMercadoPago = onRequest(
         return;
       }
 
-      const client = new MercadoPagoConfig({ accessToken: MP_ACCESS_TOKEN.value() });
+      const client = new MercadoPagoConfig({ accessToken: MERCADOPAGO_ACCESS_TOKEN.value() });
       const paymentApi = new Payment(client);
       const pago = await paymentApi.get({ id: String(paymentId) });
 
