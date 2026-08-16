@@ -22,6 +22,12 @@ export function DashboardPage() {
 
   return (
     <PageContainer>
+      {/* Debug: mostrar UID y rol actual */}
+      <div className="fixed bottom-4 right-4 bg-gray-800 text-white text-xs px-3 py-2 rounded opacity-60 hover:opacity-100 font-mono">
+        <div>UID: {usuarioFirebase?.uid?.slice(-8)}</div>
+        <div>Rol: <span className="font-bold text-yellow-300">{perfil.rol}</span></div>
+      </div>
+
       <h1 className="font-display text-2xl font-semibold text-ink mb-1">
         Hola, {perfil.nombre.split(' ')[0]}
       </h1>
