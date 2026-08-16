@@ -14,14 +14,14 @@ import type { ConId } from '@/types/firestore';
  * - alumno: ve cursos disponibles para inscripción
  */
 export function useCursos() {
-  const { perfil } = useAuth(); // Reactivo: cambia cuando el rol se actualiza
+  const { perfil, usuarioFirebase } = useAuth(); // Reactivo: cambia cuando el rol se actualiza
   const [cursos, setCursos] = useState<ConId<Curso>[]>([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Si no hay perfil aún, no hacer nada
-    if (!perfil) {
+    // Si no hay perfil o usuario Firebase aún, no hacer nada
+    if (!perfil || !usuarioFirebase) {
       setCursos([]);
       setCargando(false);
       return;
@@ -41,7 +41,7 @@ export function useCursos() {
       q = query(
         collection(db, 'cursos'),
         where('activo', '==', true),
-        where('profesor.uid', '==', perfil.uid)
+        where('profesor.uid', '==', usuarioFirebase.uid)
       );
     } else {
       // Alumnos: todos los cursos activos disponibles
@@ -77,7 +77,7 @@ export function useCursos() {
       console.log('🛑 Desuscribiendo listener de cursos');
       unsubscribe();
     };
-  }, [perfil]); // Re-suscribir cuando cambia el rol o el perfil
+  }, [perfil, usuarioFirebase]); // Re-suscribir cuando cambia el rol, perfil o usuario
 
   return { cursos, cargando, error };
 }

@@ -11,7 +11,7 @@ import type { ConId } from '@/types/firestore';
 import type { Curso } from '@/modules/cursos/types';
 
 export function CursosPage() {
-  const { cursos, cargando, error, recargar } = useCursos();
+  const { cursos, cargando, error } = useCursos();
   const [mostrarModalCurso, setMostrarModalCurso] = useState(false);
   const [cursoParaTurno, setCursoParaTurno] = useState<ConId<Curso> | null>(null);
 
@@ -36,12 +36,6 @@ export function CursosPage() {
 
         <div className="rounded-lg border border-rust/30 bg-rust/5 p-4 text-sm text-rust">
           {error}
-        </div>
-
-        <div className="mt-4">
-          <Boton variante="fantasma" onClick={recargar}>
-            Reintentar
-          </Boton>
         </div>
       </PageContainer>
     );
@@ -96,7 +90,7 @@ export function CursosPage() {
           onCerrar={() => setMostrarModalCurso(false)}
           onCreado={() => {
             setMostrarModalCurso(false);
-            recargar();
+            // La lista se actualiza automáticamente con onSnapshot
           }}
         />
       )}
