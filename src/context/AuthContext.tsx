@@ -6,7 +6,7 @@ import {
   signOut,
   type User,
 } from 'firebase/auth';
-import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, onSnapshot, setDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db, googleProvider } from '@/services/firebase';
 import type { UsuarioAutorizado } from '@/modules/usuarios/types';
 import { AuthContext } from '@/context/auth-context';
@@ -18,9 +18,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+    let unsubscribePerfil: (() => void) | undefined;
+
+    const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
       setCargando(true);
       setUsuarioFirebase(user);
+
+      unsubscribePerfil?.();
 
       if (!user) {
         setPerfil(null);
@@ -28,41 +32,54 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return;
       }
 
-      try {
-        const ref = doc(db, 'usuarios_autorizados', user.uid);
-        const snap = await getDoc(ref);
+      const ref = doc(db, 'usuarios_autorizados', user.uid);
 
-        if (!snap.exists()) {
-          const nuevoUsuario: UsuarioAutorizado = {
-            email: user.email ?? '',
-            nombre: user.displayName ?? 'Alumno',
-            rol: 'alumno',
-            activo: true,
-            fechaAlta: serverTimestamp() as any,
-          };
+      unsubscribePerfil = onSnapshot(
+        ref,
+        async (snap) => {
+          try {
+            if (!snap.exists()) {
+              const nuevoUsuario: UsuarioAutorizado = {
+                email: user.email ?? '',
+                nombre: user.displayName ?? 'Alumno',
+                rol: 'alumno',
+                activo: true,
+                fechaAlta: serverTimestamp() as any,
+              };
 
-          await setDoc(ref, nuevoUsuario);
-          setPerfil(nuevoUsuario);
-          setError(null);
-        } else {
-          const datos = snap.data() as UsuarioAutorizado;
-          if (!datos.activo) {
-            setError('Tu cuenta fue desactivada. Contactá a un administrador.');
+              await setDoc(ref, nuevoUsuario);
+              setPerfil(nuevoUsuario);
+              setError(null);
+              return;
+            }
+
+            const datos = snap.data() as UsuarioAutorizado;
+            if (!datos.activo) {
+              setError('Tu cuenta fue desactivada. Contactá a un administrador.');
+              setPerfil(null);
+            } else {
+              setPerfil(datos);
+              setError(null);
+            }
+          } catch {
+            setError('No se pudo verificar tu perfil. Intentá de nuevo.');
             setPerfil(null);
-          } else {
-            setPerfil(datos);
-            setError(null);
+          } finally {
+            setCargando(false);
           }
+        },
+        () => {
+          setError('No se pudo verificar tu perfil. Intentá de nuevo.');
+          setPerfil(null);
+          setCargando(false);
         }
-      } catch {
-        setError('No se pudo verificar tu perfil. Intentá de nuevo.');
-        setPerfil(null);
-      } finally {
-        setCargando(false);
-      }
+      );
     });
 
-    return unsubscribe;
+    return () => {
+      unsubscribePerfil?.();
+      unsubscribeAuth();
+    };
   }, []);
 
   async function iniciarSesionConGoogle() {
