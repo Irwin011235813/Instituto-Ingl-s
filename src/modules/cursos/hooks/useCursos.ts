@@ -30,23 +30,12 @@ export function useCursos() {
     setCargando(true);
     setError(null);
 
-    // Construir query dinámica según el rol
-    let q;
-    if (perfil.rol === 'admin') {
-      // Admins ven TODOS los cursos activos
-      q = query(collection(db, 'cursos'), where('activo', '==', true));
-    } else if (perfil.rol === 'profesor') {
-      // Profesores solo ven sus propios cursos activos
-      // NOTA: Asume que 'profesor' es un objeto con 'uid'
-      q = query(
-        collection(db, 'cursos'),
-        where('activo', '==', true),
-        where('profesor.uid', '==', usuarioFirebase.uid)
-      );
-    } else {
-      // Alumnos: todos los cursos activos disponibles
-      q = query(collection(db, 'cursos'), where('activo', '==', true));
-    }
+    // DEBUG: SIN FILTRADO. Todos ven todos los cursos activos.
+    // Esto es para confirmar que los datos se cargan correctamente.
+    const q = query(collection(db, 'cursos'), where('activo', '==', true));
+
+    // eslint-disable-next-line no-console
+    console.log('🔍 DEBUG useCursos: Query construida para rol:', perfil.rol);
 
     // Listener en tiempo real: se ejecuta cada vez que hay cambios
     const unsubscribe = onSnapshot(
@@ -59,7 +48,7 @@ export function useCursos() {
         setCursos(datos);
         setCargando(false);
         // eslint-disable-next-line no-console
-        console.log(`📚 Cursos cargados para rol "${perfil.rol}":`, datos.length);
+        console.log(`📚 Cursos cargados: ${datos.length}`, datos);
       },
       (err) => {
         // Error al escuchar (p.ej. índice faltante)
