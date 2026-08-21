@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { BookOpen, CalendarDays, LayoutGrid, LogOut, Menu, X } from 'lucide-react';
+import { BookOpen, CalendarDays, LayoutGrid, LogOut, Menu, User, X } from 'lucide-react';
 import { useAuth } from '@/context/useAuth';
 
 const ETIQUETA_ROL: Record<string, string> = {
@@ -16,8 +16,9 @@ const ETIQUETA_ROL: Record<string, string> = {
  * de trabajo diaria, distinta de la identidad lúdica de la landing pública.
  */
 export function Sidebar() {
-  const { perfil, cerrarSesion } = useAuth();
+  const { perfil, usuarioFirebase, cerrarSesion } = useAuth();
   const [abierto, setAbierto] = useState(false);
+  const [fotoConError, setFotoConError] = useState(false);
 
   const enlaces = [
     { to: '/panel', label: 'Panel', icon: LayoutGrid, end: true },
@@ -28,16 +29,36 @@ export function Sidebar() {
   ];
 
   const inicial = perfil?.nombre?.charAt(0).toUpperCase() ?? '?';
+  // Google siempre provee photoURL en usuarioFirebase; si algún día se suma
+  // otro proveedor de login sin foto, cae al círculo con inicial.
+  const mostrarFoto = !!usuarioFirebase?.photoURL && !fotoConError;
+
+  const avatar = (tamaño: number) =>
+    mostrarFoto ? (
+      <img
+        src={usuarioFirebase!.photoURL!}
+        alt={perfil?.nombre ?? 'Foto de perfil'}
+        referrerPolicy="no-referrer"
+        onError={() => setFotoConError(true)}
+        className="rounded-full object-cover shrink-0 ring-2 ring-white shadow-sm"
+        style={{ width: tamaño, height: tamaño }}
+      />
+    ) : (
+      <div
+        className="rounded-full bg-ink text-paper flex items-center justify-center font-display font-semibold shrink-0"
+        style={{ width: tamaño, height: tamaño }}
+      >
+        {inicial}
+      </div>
+    );
 
   return (
     <>
       {/* Barra superior, solo mobile */}
       <header className="lg:hidden sticky top-0 z-20 flex items-center justify-between border-b border-mist bg-paper/95 backdrop-blur px-4 h-14">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-md bg-ink flex items-center justify-center">
-            <BookOpen size={15} className="text-mustard" />
-          </div>
-          <span className="font-display font-semibold text-ink">Sunshine</span>
+          <img src="/shine-on-64x64.png" alt="" className="w-7 h-7 rounded-lg shrink-0" />
+          <span className="font-display font-semibold text-ink">Sunshine Instituto</span>
         </div>
         <button
           onClick={() => setAbierto(true)}
@@ -62,19 +83,22 @@ export function Sidebar() {
           abierto ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        <div className="h-16 flex items-center justify-between px-5 border-b border-mist">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-ink flex items-center justify-center shrink-0">
-              <BookOpen size={17} className="text-mustard" />
-            </div>
-            <span className="font-display font-semibold text-lg text-ink leading-tight">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-mist">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <img
+              src="/shine-on-64x64.png"
+              alt="Sunshine Instituto"
+              className="w-9 h-9 rounded-xl shrink-0 shadow-sm"
+            />
+            <span className="font-display font-semibold text-ink leading-tight text-[15px]">
               Sunshine
-              <br className="hidden" />
+              <br />
+              Instituto
             </span>
           </div>
           <button
             onClick={() => setAbierto(false)}
-            className="lg:hidden p-1 text-ink-light hover:text-ink"
+            className="lg:hidden p-1 text-ink-light hover:text-ink shrink-0"
             aria-label="Cerrar menú"
           >
             <X size={20} />
@@ -104,12 +128,11 @@ export function Sidebar() {
 
         <div className="border-t border-mist p-3">
           <div className="flex items-center gap-3 rounded-xl px-2 py-2">
-            <div className="w-9 h-9 rounded-full bg-ink text-paper flex items-center justify-center font-display font-semibold shrink-0">
-              {inicial}
-            </div>
+            {avatar(36)}
             <div className="min-w-0 flex-1">
               <p className="text-sm font-medium text-ink truncate">{perfil?.nombre}</p>
-              <p className="text-xs text-ink-light truncate">
+              <p className="text-xs text-ink-light truncate flex items-center gap-1">
+                {!mostrarFoto && <User size={11} className="shrink-0" />}
                 {perfil ? ETIQUETA_ROL[perfil.rol] : ''}
               </p>
             </div>
