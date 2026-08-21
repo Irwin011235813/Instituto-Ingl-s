@@ -25,21 +25,18 @@ export function TarjetaTurno({ turno, accion }: TarjetaTurnoProps) {
   const cupoLleno = turno.inscriptos >= turno.cupoMaximo;
 
   return (
-    <div className="ticket-edge flex bg-white border border-mist rounded-lg overflow-hidden shadow-sm transition-transform hover:-rotate-1 hover:shadow-md">
+    <div className="ticket-edge flex bg-white border border-mist rounded-2xl overflow-hidden shadow-[0_1px_3px_rgba(30,42,68,0.06)] transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(30,42,68,0.10)]">
       {/* Sello de día */}
-      <div className="flex flex-col items-center justify-center bg-ink text-paper px-4 py-3 min-w-[72px]">
-        <span className="font-mono text-xs tracking-widest opacity-70">DÍA</span>
+      <div className="flex flex-col items-center justify-center bg-ink text-paper px-4 py-3 min-w-[76px]">
+        <span className="font-mono text-[10px] tracking-widest opacity-60">DÍA</span>
         <span className="font-display text-xl font-semibold">{ABREVIATURA_DIA[turno.dia]}</span>
       </div>
 
       {/* Línea punteada tipo "corte de ticket" */}
-      <div
-        className="w-0 border-l-2 border-dashed border-mist"
-        aria-hidden="true"
-      />
+      <div className="w-px bg-[repeating-linear-gradient(to_bottom,var(--color-mist)_0_6px,transparent_6px_12px)]" aria-hidden="true" />
 
       {/* Datos del turno */}
-      <div className="flex-1 px-4 py-3 flex flex-col gap-1.5">
+      <div className="flex-1 px-4 py-3.5 flex flex-col gap-1.5">
         <p className="font-display font-semibold text-ink leading-tight">{turno.cursoNombre}</p>
         <p className="font-mono text-sm text-ink-light">
           {turno.horaInicio} – {turno.horaFin} · Aula {turno.aula}

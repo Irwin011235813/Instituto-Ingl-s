@@ -2,10 +2,9 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from '@/context/AuthContext';
 import { ProtectedRoute } from './ProtectedRoute';
 import { RoleRoute } from './RoleRoute';
-import { Navbar } from '@/components/layout/Navbar';
+import { Sidebar } from '@/components/layout/Sidebar';
 import { PublicNavbar } from '@/components/layout/PublicNavbar';
 import { Footer } from '@/components/layout/Footer';
-import { AdminFooter } from '@/components/layout/AdminFooter';
 import { PublicHomePage } from '@/pages/PublicHomePage';
 import { DashboardPage } from '@/pages/DashboardPage';
 import { TurnosPage } from '@/pages/TurnosPage';
@@ -13,10 +12,10 @@ import { CursosPage } from '@/pages/CursosPage';
 
 function AppLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
-      <main className="flex-1">{children}</main>
-      <AdminFooter />
+    <div className="min-h-screen bg-paper">
+      <Sidebar />
+      {/* Margen izquierdo solo en desktop, donde el sidebar es fijo y persistente */}
+      <div className="lg:pl-64">{children}</div>
     </div>
   );
 }

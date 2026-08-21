@@ -1,15 +1,32 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { CalendarDays, BookOpen, GraduationCap, CreditCard, Loader2, CheckCircle2 } from 'lucide-react';
+import {
+  CalendarDays,
+  BookOpen,
+  GraduationCap,
+  CreditCard,
+  Loader2,
+  CheckCircle2,
+} from 'lucide-react';
 import { PageContainer } from '@/components/layout/PageContainer';
+import { PageHeader } from '@/components/layout/PageHeader';
 import { Spinner } from '@/components/ui/Spinner';
 import { Etiqueta } from '@/components/ui/Etiqueta';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { StatCard } from '@/components/ui/StatCard';
 import { useAuth } from '@/context/useAuth';
 import { useInscripcionesDeAlumno } from '@/modules/inscripciones/hooks/useInscripcionesDeAlumno';
 import { useCursos } from '@/modules/cursos/hooks/useCursos';
+import { useTurnos } from '@/modules/turnos/hooks/useTurnos';
 import { useEstadoInscripcionAlumno } from '@/modules/pagos/hooks/useEstadoInscripcionAlumno';
 import { useCuotasDeAlumno } from '@/modules/pagos/hooks/useCuotasDeAlumno';
 import { crearPreferenciaPago } from '@/modules/pagos/services/pagosService';
-import { useState } from 'react';
+
+const ETIQUETA_ROL: Record<string, string> = {
+  alumno: 'Panel de alumno/a',
+  profesor: 'Panel de profesor/a',
+  admin: 'Panel de administración',
+};
 
 /**
  * Panel interno del usuario ya logueado. Distinto de PublicHomePage:
@@ -22,23 +39,17 @@ export function DashboardPage() {
 
   return (
     <PageContainer>
-      {/* Debug: mostrar UID y rol actual */}
-      <div className="fixed bottom-4 right-4 bg-gray-800 text-white text-xs px-3 py-2 rounded opacity-60 hover:opacity-100 font-mono">
-        <div>UID: {usuarioFirebase?.uid?.slice(-8)}</div>
-        <div>Rol: <span className="font-bold text-yellow-300">{perfil.rol}</span></div>
-      </div>
-
-      <h1 className="font-display text-2xl font-semibold text-ink mb-1">
-        Hola, {perfil.nombre.split(' ')[0]}
-      </h1>
-      <p className="text-sm text-ink-light mb-8">
-        {perfil.rol === 'alumno' && `Nivel actual: ${perfil.nivelActual ?? 'sin asignar'}`}
-        {perfil.rol === 'profesor' && 'Panel de profesor/a'}
-        {perfil.rol === 'admin' && 'Panel de administración'}
-      </p>
+      <PageHeader
+        title={`Hola, ${perfil.nombre.split(' ')[0]}`}
+        subtitle={
+          perfil.rol === 'alumno'
+            ? `Nivel actual: ${perfil.nivelActual ?? 'sin asignar'}`
+            : ETIQUETA_ROL[perfil.rol]
+        }
+      />
 
       {perfil.rol === 'alumno' ? (
-        <div className="space-y-8">
+        <div className="space-y-10">
           <ResumenAlumno alumnoUid={usuarioFirebase?.uid} />
           <PuntoDeCobro alumnoUid={usuarioFirebase?.uid} />
         </div>
@@ -55,41 +66,46 @@ function ResumenAlumno({ alumnoUid }: { alumnoUid: string | undefined }) {
   if (cargando) return <Spinner label="Cargando tus clases..." />;
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-2">
+    <section>
+      <div className="flex items-center gap-2 mb-4">
         <GraduationCap size={18} className="text-mustard-dark" />
-        <h2 className="font-display font-semibold text-ink">Mis próximas clases</h2>
+        <h2 className="font-display font-semibold text-ink text-lg">Mis próximas clases</h2>
       </div>
 
       {inscripciones.length === 0 ? (
-        <div className="bg-white border border-dashed border-mist rounded-lg p-6 text-center">
-          <p className="text-sm text-ink-light mb-3">Todavía no te inscribiste a ningún turno.</p>
-          <Link to="/turnos" className="text-sm font-medium text-mustard-dark hover:underline">
-            Ver turnos disponibles →
-          </Link>
-        </div>
+        <EmptyState
+          icon={CalendarDays}
+          title="Todavía no te inscribiste a ningún turno"
+          action={
+            <Link
+              to="/turnos"
+              className="text-sm font-semibold text-mustard-dark hover:underline"
+            >
+              Ver turnos disponibles →
+            </Link>
+          }
+        />
       ) : (
-        <ul className="space-y-2">
+        <ul className="grid gap-2.5 sm:grid-cols-2">
           {inscripciones.map((i) => (
             <li
               key={i.id}
-              className="bg-white border border-mist rounded-md px-4 py-3 flex items-center justify-between"
+              className="bg-white border border-mist rounded-xl px-4 py-3.5 flex items-center justify-between"
             >
-              <span className="text-sm text-ink">Turno inscripto</span>
+              <span className="text-sm text-ink font-medium">Turno inscripto</span>
               <Etiqueta tono="exito">Activa</Etiqueta>
             </li>
           ))}
         </ul>
       )}
-    </div>
+    </section>
   );
 }
 
 /**
  * Punto de cobro del alumno: si tiene una cuota pendiente, muestra el
  * monto y un botón que genera el link de pago de Mercado Pago al vuelo
- * (mismo mecanismo que un link de pago dinámico) y redirige al checkout.
- * Debajo, el historial de cuotas ya generadas (pagadas o no).
+ * y redirige al checkout. Debajo, el historial de cuotas ya generadas.
  */
 function PuntoDeCobro({ alumnoUid }: { alumnoUid: string | undefined }) {
   const estadoAlumno = useEstadoInscripcionAlumno(alumnoUid);
@@ -124,25 +140,24 @@ function PuntoDeCobro({ alumnoUid }: { alumnoUid: string | undefined }) {
     }
   }
 
-  if (estadoAlumno.estado === 'sin-curso') return null; // sin curso, no hay nada que cobrar todavía
+  if (estadoAlumno.estado === 'sin-curso') return null;
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-2">
+    <section>
+      <div className="flex items-center gap-2 mb-4">
         <CreditCard size={18} className="text-mustard-dark" />
-        <h2 className="font-display font-semibold text-ink">Mis pagos</h2>
+        <h2 className="font-display font-semibold text-ink text-lg">Mis pagos</h2>
       </div>
 
-      {/* Estado actual: cuota pendiente o al día */}
       {estadoAlumno.estado === 'cargando' ? (
         <Spinner label="Revisando tu cuenta..." />
       ) : estadoAlumno.estado === 'con-cuota-pendiente' ? (
-        <div className="bg-white border border-mustard/40 rounded-lg p-5 flex items-center justify-between gap-4 flex-wrap">
+        <div className="bg-white border border-mustard/40 rounded-2xl p-5 sm:p-6 flex items-center justify-between gap-4 flex-wrap shadow-[0_1px_3px_rgba(30,42,68,0.06)]">
           <div>
             <p className="text-sm text-ink-light">
               {estadoAlumno.cuota.tipo === 'matricula' ? 'Matrícula pendiente' : 'Cuota mensual pendiente'}
             </p>
-            <p className="font-display text-2xl font-semibold text-ink">
+            <p className="font-display text-3xl font-semibold text-ink mt-0.5">
               ${estadoAlumno.cuota.monto.toLocaleString('es-AR')}
             </p>
             <p className="text-xs text-ink-light mt-1">{estadoAlumno.cuota.cursoNombre}</p>
@@ -151,7 +166,7 @@ function PuntoDeCobro({ alumnoUid }: { alumnoUid: string | undefined }) {
             <button
               onClick={pagarCuotaPendiente}
               disabled={procesando}
-              className="rounded-full bg-sage px-5 py-2.5 text-sm font-bold text-white transition hover:bg-sage-dark disabled:cursor-not-allowed disabled:opacity-60 flex items-center gap-2"
+              className="rounded-full bg-sage px-5 py-2.5 text-sm font-bold text-white transition hover:bg-sage-dark disabled:cursor-not-allowed disabled:opacity-60 flex items-center gap-2 shadow-sm"
             >
               {procesando ? (
                 <>
@@ -165,16 +180,16 @@ function PuntoDeCobro({ alumnoUid }: { alumnoUid: string | undefined }) {
           </div>
         </div>
       ) : estadoAlumno.estado === 'al-dia' ? (
-        <div className="bg-white border border-mustard/40 rounded-lg p-5 flex items-center justify-between gap-4 flex-wrap">
+        <div className="bg-white border border-mustard/40 rounded-2xl p-5 sm:p-6 flex items-center justify-between gap-4 flex-wrap shadow-[0_1px_3px_rgba(30,42,68,0.06)]">
           <div>
             <p className="text-sm text-ink-light">Tu inscripción está activa</p>
-            <p className="font-display text-xl font-semibold text-ink">Pagar cuota</p>
+            <p className="font-display text-xl font-semibold text-ink mt-0.5">Pagar cuota</p>
           </div>
           <div className="flex flex-col items-end gap-2">
             <button
               onClick={pagarCuotaPendiente}
               disabled={procesando}
-              className="rounded-full bg-sage px-5 py-2.5 text-sm font-bold text-white transition hover:bg-sage-dark disabled:cursor-not-allowed disabled:opacity-60 flex items-center gap-2"
+              className="rounded-full bg-sage px-5 py-2.5 text-sm font-bold text-white transition hover:bg-sage-dark disabled:cursor-not-allowed disabled:opacity-60 flex items-center gap-2 shadow-sm"
             >
               {procesando ? (
                 <>
@@ -188,15 +203,14 @@ function PuntoDeCobro({ alumnoUid }: { alumnoUid: string | undefined }) {
           </div>
         </div>
       ) : (
-        <div className="bg-white border border-mist rounded-lg p-5 flex items-center gap-3">
+        <div className="bg-white border border-mist rounded-2xl p-5 flex items-center gap-3">
           <CheckCircle2 size={20} className="text-sage-dark shrink-0" />
           <p className="text-sm text-ink-light">Estás al día con tus pagos. ¡Gracias!</p>
         </div>
       )}
 
-      {/* Historial */}
       {!cargandoCuotas && cuotas.length > 0 && (
-        <div>
+        <div className="mt-5">
           <p className="text-xs font-mono uppercase tracking-widest text-ink-light mb-2">
             Historial
           </p>
@@ -204,7 +218,7 @@ function PuntoDeCobro({ alumnoUid }: { alumnoUid: string | undefined }) {
             {cuotas.map((c) => (
               <li
                 key={c.id}
-                className="bg-white border border-mist rounded-md px-4 py-2.5 flex items-center justify-between text-sm"
+                className="bg-white border border-mist rounded-xl px-4 py-2.5 flex items-center justify-between text-sm"
               >
                 <span className="text-ink-light">
                   {c.tipo === 'matricula' ? 'Matrícula' : `Cuota ${c.periodo ?? ''}`} ·{' '}
@@ -225,37 +239,45 @@ function PuntoDeCobro({ alumnoUid }: { alumnoUid: string | undefined }) {
           </ul>
         </div>
       )}
-    </div>
+    </section>
   );
 }
 
 function ResumenGestion() {
-  const { cursos, cargando } = useCursos();
+  const { cursos, cargando: cargandoCursos } = useCursos();
+  const { turnos, cargando: cargandoTurnos } = useTurnos();
 
-  if (cargando) return <Spinner label="Cargando cursos..." />;
+  if (cargandoCursos || cargandoTurnos) return <Spinner label="Cargando panel..." />;
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2">
-      <Link
-        to="/cursos"
-        className="bg-white border border-mist rounded-lg p-5 flex items-start gap-3 hover:border-mustard-dark transition-colors"
-      >
-        <BookOpen size={20} className="text-mustard-dark shrink-0" />
-        <div>
-          <p className="font-display font-semibold text-ink">{cursos.length} cursos activos</p>
-          <p className="text-sm text-ink-light">Gestionar cursos y niveles</p>
-        </div>
-      </Link>
-      <Link
-        to="/turnos"
-        className="bg-white border border-mist rounded-lg p-5 flex items-start gap-3 hover:border-mustard-dark transition-colors"
-      >
-        <CalendarDays size={20} className="text-mustard-dark shrink-0" />
-        <div>
-          <p className="font-display font-semibold text-ink">Turnos de la semana</p>
-          <p className="text-sm text-ink-light">Ver horarios y cupos</p>
-        </div>
-      </Link>
+    <div className="space-y-8">
+      <div className="grid gap-4 sm:grid-cols-2">
+        <StatCard icon={BookOpen} label="Cursos activos" value={cursos.length} to="/cursos" />
+        <StatCard icon={CalendarDays} label="Turnos programados" value={turnos.length} to="/turnos" />
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Link
+          to="/cursos"
+          className="bg-white border border-mist rounded-2xl p-5 flex items-start gap-3 transition-all hover:border-mustard-dark/40 hover:shadow-[0_4px_16px_rgba(30,42,68,0.08)]"
+        >
+          <BookOpen size={20} className="text-mustard-dark shrink-0 mt-0.5" />
+          <div>
+            <p className="font-display font-semibold text-ink">Gestionar cursos</p>
+            <p className="text-sm text-ink-light mt-0.5">Crear cursos, precios y niveles</p>
+          </div>
+        </Link>
+        <Link
+          to="/turnos"
+          className="bg-white border border-mist rounded-2xl p-5 flex items-start gap-3 transition-all hover:border-mustard-dark/40 hover:shadow-[0_4px_16px_rgba(30,42,68,0.08)]"
+        >
+          <CalendarDays size={20} className="text-mustard-dark shrink-0 mt-0.5" />
+          <div>
+            <p className="font-display font-semibold text-ink">Turnos de la semana</p>
+            <p className="text-sm text-ink-light mt-0.5">Ver horarios y cupos</p>
+          </div>
+        </Link>
+      </div>
     </div>
   );
 }

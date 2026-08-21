@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { CalendarX2 } from 'lucide-react';
 import { PageContainer } from '@/components/layout/PageContainer';
+import { PageHeader } from '@/components/layout/PageHeader';
 import { Spinner } from '@/components/ui/Spinner';
 import { Boton } from '@/components/ui/Boton';
-import { Etiqueta } from '@/components/ui/Etiqueta';
+import { EmptyState } from '@/components/ui/EmptyState';
 import { TarjetaTurno } from '@/modules/turnos/components/TarjetaTurno';
 import { useTurnos } from '@/modules/turnos/hooks/useTurnos';
 import { useAuth } from '@/context/useAuth';
@@ -75,80 +77,87 @@ export function TurnosPage() {
 
   return (
     <PageContainer>
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="font-display text-2xl font-semibold text-ink">Turnos de clase</h1>
-        {mensaje && <Etiqueta tono="acento">{mensaje}</Etiqueta>}
-      </div>
+      <PageHeader title="Turnos de clase" subtitle="Horarios disponibles por día" />
+
+      {mensaje && (
+        <div className="mb-6 rounded-xl border border-sage/30 bg-sage/10 px-4 py-3 text-sm text-sage-dark">
+          {mensaje}
+        </div>
+      )}
 
       {error && (
-        <div className="mb-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+        <div className="mb-6 rounded-xl border border-rust/30 bg-rust/5 px-4 py-3 text-sm text-rust">
           {error}
         </div>
       )}
 
-      {turnos.length === 0 && !error && (
-        <p className="text-ink-light text-sm">Todavía no hay turnos programados.</p>
-      )}
+      {turnos.length === 0 && !error ? (
+        <EmptyState
+          icon={CalendarX2}
+          title="Todavía no hay turnos programados"
+          description="Los turnos se crean desde la sección Cursos, eligiendo día, horario y aula para cada programa."
+        />
+      ) : (
+        <div className="space-y-9">
+          {DIAS_SEMANA.map((dia) => {
+            const turnosDelDia = turnos.filter((t) => t.dia === dia);
+            if (turnosDelDia.length === 0) return null;
 
-      <div className="space-y-8">
-        {DIAS_SEMANA.map((dia) => {
-          const turnosDelDia = turnos.filter((t) => t.dia === dia);
-          if (turnosDelDia.length === 0) return null;
+            return (
+              <section key={dia}>
+                <h2 className="font-mono text-xs uppercase tracking-widest text-ink-light mb-3">
+                  {dia}
+                </h2>
+                <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                  {turnosDelDia.map((turno) => {
+                    const inscripcion = inscripcionDelTurno(turno.id);
+                    const cupoLleno = turno.inscriptos >= turno.cupoMaximo;
 
-          return (
-            <section key={dia}>
-              <h2 className="font-mono text-xs uppercase tracking-widest text-ink-light mb-3">
-                {dia}
-              </h2>
-              <div className="grid gap-3 sm:grid-cols-2">
-                {turnosDelDia.map((turno) => {
-                  const inscripcion = inscripcionDelTurno(turno.id);
-                  const cupoLleno = turno.inscriptos >= turno.cupoMaximo;
-
-                  return (
-                    <TarjetaTurno
-                      key={turno.id}
-                      turno={turno}
-                      accion={
-                        esAlumno ? (
-                          inscripcion ? (
+                    return (
+                      <TarjetaTurno
+                        key={turno.id}
+                        turno={turno}
+                        accion={
+                          esAlumno ? (
+                            inscripcion ? (
+                              <Boton
+                                variante="fantasma"
+                                className="text-xs py-1.5"
+                                disabled={procesando === turno.id}
+                                onClick={() => manejarCancelacionInscripcion(inscripcion.id, turno.id)}
+                              >
+                                Cancelar inscripción
+                              </Boton>
+                            ) : (
+                              <Boton
+                                variante="secundario"
+                                className="text-xs py-1.5"
+                                disabled={cupoLleno || procesando === turno.id}
+                                onClick={() => manejarInscripcion(turno.id, turno.cursoId)}
+                              >
+                                {cupoLleno ? 'Sin cupo' : 'Inscribirme'}
+                              </Boton>
+                            )
+                          ) : puedeGestionar ? (
                             <Boton
                               variante="fantasma"
                               className="text-xs py-1.5"
                               disabled={procesando === turno.id}
-                              onClick={() => manejarCancelacionInscripcion(inscripcion.id, turno.id)}
+                              onClick={() => manejarCancelacionTurno(turno.id)}
                             >
-                              Cancelar inscripción
+                              Cancelar turno
                             </Boton>
-                          ) : (
-                            <Boton
-                              variante="secundario"
-                              className="text-xs py-1.5"
-                              disabled={cupoLleno || procesando === turno.id}
-                              onClick={() => manejarInscripcion(turno.id, turno.cursoId)}
-                            >
-                              {cupoLleno ? 'Sin cupo' : 'Inscribirme'}
-                            </Boton>
-                          )
-                        ) : puedeGestionar ? (
-                          <Boton
-                            variante="fantasma"
-                            className="text-xs py-1.5"
-                            disabled={procesando === turno.id}
-                            onClick={() => manejarCancelacionTurno(turno.id)}
-                          >
-                            Cancelar turno
-                          </Boton>
-                        ) : null
-                      }
-                    />
-                  );
-                })}
-              </div>
-            </section>
-          );
-        })}
-      </div>
+                          ) : null
+                        }
+                      />
+                    );
+                  })}
+                </div>
+              </section>
+            );
+          })}
+        </div>
+      )}
     </PageContainer>
   );
 }
