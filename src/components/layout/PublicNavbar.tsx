@@ -1,20 +1,19 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/useAuth';
 
 /**
  * Navbar exclusivo de la landing pública (antes de iniciar sesión).
- * Mantiene la identidad lúdica del instituto (sol, arcoíris, nubes),
- * separada a propósito del Navbar interno (que es sobrio, para el
- * panel de trabajo real de alumnos/profesores/admin).
+ * Mantiene la identidad lúdica del instituto (nubes),
+ * adaptado con logo gigante de fondo, menú móvil moderno y efecto blur.
  */
 export function PublicNavbar() {
   const { usuarioFirebase, cargando, error, iniciarSesionConGoogle } = useAuth();
   const navigate = useNavigate();
+  
+  // Estado para controlar si el menú móvil está abierto o cerrado
+  const [menuAbierto, setMenuAbierto] = useState(false);
 
-  // Una vez que la sesión de Google resuelve (con o sin perfil habilitado),
-  // pasamos al panel. Si el perfil todavía no está habilitado, ProtectedRoute
-  // se encarga de mostrar el mensaje de "Acceso pendiente" ahí mismo.
   useEffect(() => {
     if (!cargando && usuarioFirebase) {
       navigate('/panel', { replace: true });
@@ -22,120 +21,148 @@ export function PublicNavbar() {
   }, [cargando, usuarioFirebase, navigate]);
 
   return (
-    <header className="relative w-full overflow-hidden bg-linear-to-b from-sky-300 via-blue-200 to-white py-4 shadow-lg">
-      <style>{`
-        @keyframes floatLeft {
-          0% { transform: translateX(100vw); }
-          100% { transform: translateX(-150px); }
-        }
-        .animate-float-left { animation: floatLeft 35s linear infinite; }
-        .animate-float-left-fast { animation: floatLeft 22s linear infinite; }
-      `}</style>
-
-      {/* Arcoíris de fondo */}
-      <div className="absolute bottom-0 left-0 right-0 h-24 opacity-80 pointer-events-none">
-        <svg viewBox="0 0 1200 100" preserveAspectRatio="none" className="w-full h-full">
-          <path d="M0,100 Q300,0 600,100 T1200,100" fill="none" stroke="#FFB3B3" strokeWidth="15" />
-          <path d="M0,100 Q300,15 600,100 T1200,100" fill="none" stroke="#FFD999" strokeWidth="15" />
-          <path d="M0,100 Q300,30 600,100 T1200,100" fill="none" stroke="#FFFFCC" strokeWidth="15" />
-          <path d="M0,100 Q300,45 600,100 T1200,100" fill="none" stroke="#CCFFCC" strokeWidth="15" />
-          <path d="M0,100 Q300,60 600,100 T1200,100" fill="none" stroke="#99CCFF" strokeWidth="15" />
-          <path d="M0,100 Q300,75 600,100 T1200,100" fill="none" stroke="#CC99FF" strokeWidth="15" />
-        </svg>
-      </div>
-
-      {/* Nubes flotando */}
-      <div className="absolute top-4 opacity-90 animate-float-left" aria-hidden="true">
-        <svg className="w-32 h-16 text-white drop-shadow-md" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M18.42 9.22a6.003 6.003 0 00-11.84 0 4.001 4.001 0 000 7.56h11.84a4.001 4.001 0 000-7.56z" />
-        </svg>
-      </div>
-      <div
-        className="absolute top-12 opacity-80 animate-float-left-fast"
-        style={{ animationDelay: '-10s' }}
-        aria-hidden="true"
+    <>
+      <header 
+        className="relative w-full overflow-hidden bg-white bg-size-[auto_550px] bg-position-[-20px_center] bg-no-repeat py-4 shadow-lg min-h-30 flex flex-col justify-center"
+        style={{ backgroundImage: "url('/newLogoNav.jpg')" }}
       >
-        <svg className="w-20 h-10 text-white drop-shadow-sm" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M18.42 9.22a6.003 6.003 0 00-11.84 0 4.001 4.001 0 000 7.56h11.84a4.001 4.001 0 000-7.56z" />
-        </svg>
-      </div>
+        <style>{`
+          @keyframes floatLeft {
+            0% { transform: translateX(100vw); }
+            100% { transform: translateX(-150px); }
+          }
+          .animate-float-left { animation: floatLeft 35s linear infinite; }
+          .animate-float-left-fast { animation: floatLeft 22s linear infinite; }
+        `}</style>
 
-      {/* Sol girando */}
-      <div
-        className="absolute -top-8 -right-8 opacity-90 animate-spin"
-        style={{ animationDuration: '30s' }}
-        aria-hidden="true"
-      >
-        <svg viewBox="0 0 100 100" className="w-36 h-36">
-          <g>
-            {[0, 45, 90, 135, 180, 225, 270, 315].map((deg, i) => (
-              <line
-                key={deg}
-                x1="50"
-                y1="50"
-                x2="50"
-                y2="5"
-                stroke={i % 2 === 0 ? '#FF6B6B' : '#4ECDC4'}
-                strokeWidth="4"
-                strokeLinecap="round"
-                transform={`rotate(${deg} 50 50)`}
-              />
-            ))}
-            <circle cx="50" cy="50" r="28" fill="#FFD700" />
-            <circle cx="40" cy="45" r="3" fill="#333" />
-            <circle cx="60" cy="45" r="3" fill="#333" />
-            <path d="M 38 55 Q 50 68 62 55" stroke="#333" strokeWidth="3" fill="none" strokeLinecap="round" />
-          </g>
-        </svg>
-      </div>
-
-      {/* Contenido real de la barra: un único <nav>, sin anidar */}
-      <nav className="relative z-10 mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-y-2 px-4">
-        <Link to="/" className="flex min-w-0 items-center gap-2">
-          <svg viewBox="0 0 100 100" className="h-8 w-8 shrink-0 sm:h-9 sm:w-9" aria-hidden="true">
-            <circle cx="50" cy="50" r="18" fill="#FFD700" />
-            <line x1="50" y1="10" x2="50" y2="25" stroke="#FF6B6B" strokeWidth="3" strokeLinecap="round" />
-            <line x1="50" y1="75" x2="50" y2="90" stroke="#4ECDC4" strokeWidth="3" strokeLinecap="round" />
-            <line x1="10" y1="50" x2="25" y2="50" stroke="#FFE66D" strokeWidth="3" strokeLinecap="round" />
-            <line x1="75" y1="50" x2="90" y2="50" stroke="#FF6B6B" strokeWidth="3" strokeLinecap="round" />
-            <circle cx="44" cy="46" r="3" fill="#333" />
-            <circle cx="56" cy="46" r="3" fill="#333" />
-            <path d="M 42 54 Q 50 62 58 54" stroke="#333" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+        {/* Nubes flotando */}
+        <div className="absolute top-4 opacity-90 animate-float-left pointer-events-none" aria-hidden="true">
+          <svg className="w-32 h-16 text-white drop-shadow-md" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M18.42 9.22a6.003 6.003 0 00-11.84 0 4.001 4.001 0 000 7.56h11.84a4.001 4.001 0 000-7.56z" />
           </svg>
-          <span
-            className="truncate font-['Fredoka'] text-base font-bold uppercase tracking-wide text-white sm:text-xl sm:tracking-widest"
-            style={{ textShadow: '0 1px 3px rgba(0,0,0,0.35)' }}
-          >
-            Sunshine Instituto
-          </span>
-        </Link>
-
-        <div className="hidden items-center gap-6 text-sm font-semibold text-slate-700 md:flex">
-          <a href="#cursos" className="transition hover:text-amber-600">
-            Cursos
-          </a>
-          <a href="#testimonios" className="transition hover:text-amber-600">
-            Testimonios
-          </a>
-          <a href="#contacto" className="transition hover:text-amber-600">
-            Contacto
-          </a>
+        </div>
+        <div
+          className="absolute top-12 opacity-80 animate-float-left-fast pointer-events-none"
+          style={{ animationDelay: '-10s' }}
+          aria-hidden="true"
+        >
+          <svg className="w-20 h-10 text-white drop-shadow-sm" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M18.42 9.22a6.003 6.003 0 00-11.84 0 4.001 4.001 0 000 7.56h11.84a4.001 4.001 0 000-7.56z" />
+          </svg>
         </div>
 
-        <div className="flex shrink-0 flex-col items-end gap-1">
+        {/* Contenido de la barra principal */}
+        <nav className="relative z-10 flex w-full flex-wrap items-center justify-end px-8">
+          
+          {/* Zona de clic invisible sobre el logo de fondo */}
+          <Link to="/" className="block h-16 w-70 shrink-0 mr-auto" aria-label="Inicio">    
+          </Link>
+
+          {/* MENÚ DE ESCRITORIO (Oculto en móviles) */}
+          <div className="hidden items-center gap-6 text-sm font-semibold text-slate-700 md:flex mr-6">
+            <a href="#cursos" className="transition hover:text-amber-600">
+              Cursos
+            </a>
+            <a href="#testimonios" className="transition hover:text-amber-600">
+              Testimonios
+            </a>
+            <a href="#contacto" className="transition hover:text-amber-600">
+              Contacto
+            </a>
+          </div>
+
+          {/* Botón de inicio de sesión de Escritorio */}
+          <div className="hidden md:block shrink-0">
+            <button
+              onClick={iniciarSesionConGoogle}
+              disabled={cargando}
+              className="whitespace-nowrap rounded-full bg-slate-800 px-4 py-2 text-sm font-bold text-white shadow-md transition hover:bg-slate-700 disabled:opacity-60"
+            >
+              {cargando ? 'Verificando...' : 'Iniciar sesión'}
+            </button>
+          </div>
+
+          {/* BOTÓN HAMBURGUESA ANIMADO (Móviles) */}
           <button
-            onClick={iniciarSesionConGoogle}
-            disabled={cargando}
-            className="whitespace-nowrap rounded-full bg-white/90 px-4 py-2 text-sm font-bold text-slate-800 shadow-sm transition hover:bg-white disabled:opacity-60"
+            onClick={() => setMenuAbierto(!menuAbierto)}
+            className="relative md:hidden z-20 flex h-11 w-11 flex-col items-center justify-center gap-1.5 rounded-xl border border-slate-200/60 bg-white/70 backdrop-blur-md shadow-xs transition-all duration-300 ease-out hover:scale-105 active:scale-95 hover:bg-white/90 hover:shadow-sm"
+            aria-label={menuAbierto ? "Cerrar menú" : "Abrir menú"}
           >
-            {cargando ? 'Verificando...' : 'Iniciar sesión'}
+            <span 
+              className={`h-0.5 w-5 rounded-full bg-slate-700 transition-all duration-300 ease-out ${
+                menuAbierto ? 'rotate-45 translate-y-2 bg-amber-600' : ''
+              }`}
+            />
+            <span 
+              className={`h-0.5 w-5 rounded-full bg-slate-700 transition-all duration-200 ease-out ${
+                menuAbierto ? 'opacity-0 -translate-x-2' : ''
+              }`}
+            />
+            <span 
+              className={`h-0.5 w-5 rounded-full bg-slate-700 transition-all duration-300 ease-out ${
+                menuAbierto ? '-rotate-45 -translate-y-2 bg-amber-600' : ''
+              }`}
+            />
           </button>
-        </div>
 
-        {error && (
-          <p className="w-full text-right text-xs text-white/90 sm:max-w-[220px]">{error}</p>
-        )}
-      </nav>
-    </header>
+          {error && (
+            <p className="w-full text-right text-xs text-red-500 sm:max-w-55 mt-1">{error}</p>
+          )}
+        </nav>
+
+        {/* MENÚ MÓVIL DESPLEGABLE (Glassmorphism) */}
+        <div 
+          className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out relative z-10 bg-white/80 backdrop-blur-md w-full ${
+            menuAbierto 
+              ? 'max-h-72 opacity-100 mt-4 border-t border-slate-100 shadow-lg py-6' 
+              : 'max-h-0 opacity-0 py-0'
+          }`}
+        >
+          <div className="flex flex-col items-center gap-2 font-['Fredoka'] font-semibold text-slate-700">
+            <a href="#cursos" onClick={() => setMenuAbierto(false)} className="w-full text-center py-2 text-base tracking-wide hover:text-amber-600 hover:bg-slate-50/50 transition-all rounded-lg max-w-[85%]">
+              Cursos
+            </a>
+            <a href="#testimonios" onClick={() => setMenuAbierto(false)} className="w-full text-center py-2 text-base tracking-wide hover:text-amber-600 hover:bg-slate-50/50 transition-all rounded-lg max-w-[85%]">
+              Testimonios
+            </a>
+            <a href="#contacto" onClick={() => setMenuAbierto(false)} className="w-full text-center py-2 text-base tracking-wide hover:text-amber-600 hover:bg-slate-50/50 transition-all rounded-lg max-w-[85%]">
+              Contacto
+            </a>
+            
+            {/* Botón de Google en móvil */}
+            <div className="w-full px-8 mt-4">
+              <button
+                onClick={() => {
+                  setMenuAbierto(false);
+                  iniciarSesionConGoogle();
+                }}
+                disabled={cargando}
+                className="w-full rounded-full bg-linear-to-r from-slate-800 to-slate-900 py-3 text-center text-sm font-bold text-white shadow-md transition-all duration-200 hover:opacity-95 active:scale-[0.99] disabled:opacity-60 flex items-center justify-center gap-2"
+              >
+                {cargando ? (
+                  'Verificando...'
+                ) : (
+                  <>
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12.24 10.285V13.4h6.887c-.275 1.565-1.88 4.604-6.887 4.604-4.33 0-7.866-3.577-7.866-8s3.536-8 7.866-8c2.46 0 4.105 1.025 5.047 1.926l2.427-2.334C17.955 2.192 15.34 1 12.24 1 6.12 1 1.16 5.92 1.16 12s4.96 11 11.08 11c6.39 0 10.646-4.414 10.646-10.86 0-.733-.078-1.293-.173-1.855H12.24z"/>
+                    </svg>
+                    <span>Ingresar con Google</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* CAPA DE ENFOQUE (OVERLAY BLUR) */}
+      {menuAbierto && (
+        <div 
+          onClick={() => setMenuAbierto(false)}
+          className="fixed inset-0 top-30 z-0 bg-slate-900/10 backdrop-blur-md transition-all duration-300 md:hidden"
+          style={{ height: 'calc(100vh - 120px)' }}
+        />
+      )}
+    </>
   );
 }
